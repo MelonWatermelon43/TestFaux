@@ -9,6 +9,7 @@ import net.mat0u5.lifeseries.seasons.season.pastlife.PastLifeCommands;
 import net.mat0u5.lifeseries.seasons.season.secretlife.SecretLifeCommands;
 import net.mat0u5.lifeseries.seasons.season.wildlife.WildLifeCommands;
 import net.mat0u5.lifeseries.seasons.secretsociety.SocietyCommands;
+import net.mat0u5.lifeseries.seasons.subin.SubInCommands;
 import net.minecraft.command.CommandRegistryAccess;
 import net.minecraft.server.command.ServerCommandSource;
 
@@ -33,6 +34,7 @@ public class CommandManager {
         commands.add(new WatcherCommand());
         commands.add(new SocietyCommands());
         commands.add(new TestingCommands());
+        commands.add(new SubInCommands());
     }
 
     public static void registerAllCommands(CommandDispatcher<ServerCommandSource> dispatcher, CommandRegistryAccess commandRegistryAccess, net.minecraft.server.command.CommandManager.RegistrationEnvironment registrationEnvironment) {

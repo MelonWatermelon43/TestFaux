@@ -420,6 +420,9 @@ public class SecretLife extends Season {
     public void sessionChangeStatus(SessionStatus newStatus) {
         super.sessionChangeStatus(newStatus);
         checkNaturalRegeneration();
+        for (ServerPlayerEntity player : PlayerUtils.getAllPlayers()) {
+            player.setHealth((float) getPlayerHealth(player));
+        }
     }
 
     public void checkNaturalRegeneration() {

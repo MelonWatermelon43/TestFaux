@@ -37,3 +37,16 @@ You can no longer get stuck outside the world border forever after it changes so
 
 You will now be automatically assigned lives when you join a session of Last Life after the lives were assigned. (Also how on earth was this not a feature already???? I could've sworn it was already in the mod.)<br>
 Added the 'only_lose_hearts_in_session' Secret Life config. Default value is false.
+
+----------
+
+Added the ability to sub in players for offline players. This will copy the data of the offline player and give it to the online player, essentially making them play as the offline player.<br>
+This includes inventory data, xp, position, lives, double life soulmates, ....
+
+<details open>
+<summary>/subin</summary>
+
+- `/subin list` - Shows a list of all subbed in players.
+- `/subin add <player> <subinfor>` - Substitues `<player>` for `<subinfor>`.
+- `/subin remove <player>` - Stops `<player>`'s substitution.
+</details>

@@ -5,6 +5,7 @@ import net.mat0u5.lifeseries.seasons.boogeyman.advanceddeaths.AdvancedDeathsMana
 import net.mat0u5.lifeseries.seasons.season.doublelife.DoubleLife;
 import net.mat0u5.lifeseries.seasons.season.wildlife.wildcards.wildcard.superpowers.superpower.Necromancy;
 import net.mat0u5.lifeseries.seasons.session.SessionTranscript;
+import net.mat0u5.lifeseries.seasons.subin.SubInManager;
 import net.mat0u5.lifeseries.utils.enums.PacketNames;
 import net.mat0u5.lifeseries.utils.other.TextUtils;
 import net.mat0u5.lifeseries.utils.player.PlayerUtils;
@@ -242,11 +243,21 @@ public class LivesManager {
             PlayerUtils.safelyPutIntoSurvival(player);
         }
         currentSeason.reloadPlayerTeam(player);
+
+        if (SubInManager.isSubbingIn(player.getUuid())) {
+            String substitutedPlayerName = SubInManager.getSubstitutedPlayer(player.getUuid()).getName();
+            setScore(substitutedPlayerName, lives);
+        }
     }
 
     public void setScore(String playerName, int lives) {
         ScoreboardUtils.setScore(ScoreHolder.fromName(playerName), SCOREBOARD_NAME, lives);
         currentSeason.reloadAllPlayerTeams();
+    }
+
+    @Nullable
+    public Integer getScoreLives(String playerName) {
+        return ScoreboardUtils.getScore(ScoreHolder.fromName(playerName), SCOREBOARD_NAME);
     }
 
     @Nullable

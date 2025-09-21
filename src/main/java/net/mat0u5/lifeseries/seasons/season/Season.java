@@ -13,6 +13,7 @@ import net.mat0u5.lifeseries.seasons.season.wildlife.WildLife;
 import net.mat0u5.lifeseries.seasons.secretsociety.SecretSociety;
 import net.mat0u5.lifeseries.seasons.session.SessionStatus;
 import net.mat0u5.lifeseries.seasons.session.SessionTranscript;
+import net.mat0u5.lifeseries.seasons.subin.SubInManager;
 import net.mat0u5.lifeseries.utils.other.OtherUtils;
 import net.mat0u5.lifeseries.utils.other.TaskScheduler;
 import net.mat0u5.lifeseries.utils.other.TextUtils;
@@ -426,6 +427,12 @@ public abstract class Season {
                 doubleLife.resetSoulmate(player);
             }
         }
+
+        TaskScheduler.scheduleTask(1, () -> {
+            if (SubInManager.isBeingSubstituted(player.getUuid())) {
+                SubInManager.removeSubIn(player);
+            }
+        });
     }
 
     public void assignDefaultLives(ServerPlayerEntity player) {

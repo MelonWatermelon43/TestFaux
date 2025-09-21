@@ -40,11 +40,8 @@ public abstract class LivingEntityMixin {
     @Inject(method = "heal", at = @At("HEAD"), cancellable = true)
     private void onHealHead(float amount, CallbackInfo info) {
         if (!Main.isLogicalSide() || Main.modDisabled()) return;
-        if (currentSeason instanceof SecretLife secretLife) {
-            if (!secretLife.canChangeHealth()) {
-                return;
-            }
-        }
+        if (!(currentSeason instanceof SecretLife secretLife)) return;
+        if (!secretLife.canChangeHealth()) return;
 
         LivingEntity entity = (LivingEntity) (Object) this;
         if (entity instanceof ServerPlayerEntity) {

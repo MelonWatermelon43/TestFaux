@@ -1,6 +1,7 @@
 package net.mat0u5.lifeseries.mixin;
 
 import net.mat0u5.lifeseries.Main;
+import net.mat0u5.lifeseries.utils.interfaces.IPlayerManager;
 import net.mat0u5.lifeseries.utils.player.PlayerUtils;
 import net.minecraft.entity.Entity;
 import net.minecraft.network.ClientConnection;
@@ -10,8 +11,12 @@ import net.minecraft.server.PlayerManager;
 import net.minecraft.server.network.ConnectedClientData;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
+import net.minecraft.world.PlayerSaveHandler;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.Redirect;
@@ -34,7 +39,26 @@ import static net.mat0u5.lifeseries.Main.currentSeason;
 //?}
 
 @Mixin(value = PlayerManager.class, priority = 1)
-public class PlayerManagerMixin {
+public abstract class PlayerManagerMixin implements IPlayerManager {
+
+    @Final
+    @Shadow
+    private PlayerSaveHandler saveHandler;
+
+    @Override
+    public PlayerSaveHandler ls$getSaveHandler() {
+        return saveHandler;
+    }
+
+
+    @Invoker("savePlayerData")
+    abstract void invokeSavePlayerData(ServerPlayerEntity player);
+
+    @Override
+    public void ls$savePlayerData(ServerPlayerEntity player) {
+        invokeSavePlayerData(player);
+    }
+
     @Inject(method = "broadcast(Lnet/minecraft/text/Text;Ljava/util/function/Function;Z)V", at = @At("HEAD"), cancellable = true)
     public void broadcast(Text message, Function<ServerPlayerEntity, Text> playerMessageFactory, boolean overlay, CallbackInfo ci) {
         if (Main.modFullyDisabled()) return;

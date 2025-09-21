@@ -20,6 +20,7 @@
     "PlayerInventoryMixin",
     "PlayerListS2CPacketAccessor",
     "PlayerManagerMixin",
+    "PlayerSaveHandlerMixin",
     "RecipeManagerMixin",
     "SavePropertiesMixin",
     "ServerCommandSourceMixin",
