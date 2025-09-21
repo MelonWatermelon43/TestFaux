@@ -32,3 +32,8 @@ Added the 'wildcard_sizeshifting_fix_bugs' Wild Life config, Which fixes the bug
 ----------
 
 You can no longer get stuck outside the world border forever after it changes so that you become out of bounds.
+
+----------
+
+You will now be automatically assigned lives when you join a session of Last Life after the lives were assigned. (Also how on earth was this not a feature already???? I could've sworn it was already in the mod.)<br>
+Added the 'only_lose_hearts_in_session' Secret Life config. Default value is false.

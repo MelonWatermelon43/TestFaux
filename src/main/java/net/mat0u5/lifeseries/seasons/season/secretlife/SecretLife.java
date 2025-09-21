@@ -4,6 +4,7 @@ import net.mat0u5.lifeseries.config.ConfigManager;
 import net.mat0u5.lifeseries.seasons.season.Season;
 import net.mat0u5.lifeseries.seasons.season.Seasons;
 import net.mat0u5.lifeseries.seasons.session.SessionAction;
+import net.mat0u5.lifeseries.seasons.session.SessionStatus;
 import net.mat0u5.lifeseries.seasons.session.SessionTranscript;
 import net.mat0u5.lifeseries.utils.other.OtherUtils;
 import net.mat0u5.lifeseries.utils.other.TaskScheduler;
@@ -29,6 +30,7 @@ import net.minecraft.text.Text;
 import net.minecraft.util.Formatting;
 import net.minecraft.world.GameRules;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.*;
 
@@ -41,6 +43,8 @@ public class SecretLife extends Season {
     public static final String COMMANDS_TEXT = "/claimkill, /lives, /gift";
     public static double MAX_HEALTH = 60.0d;
     public static double MAX_KILL_HEALTH = 1000.0d;
+    public static boolean ONLY_LOSE_HEARTS_IN_SESSION = false;
+
     public ItemSpawner itemSpawner;
     SessionAction taskWarningAction = new SessionAction(OtherUtils.minutesToTicks(-5)+1) {
         @Override
@@ -79,7 +83,6 @@ public class SecretLife extends Season {
     @Override
     public void initialize() {
         super.initialize();
-        NO_HEALING = true;
         TaskManager.initialize();
         initializeItemSpawner();
     }
@@ -100,6 +103,7 @@ public class SecretLife extends Season {
         TaskManager.ASSIGN_TASKS_MINUTE = SecretLifeConfig.ASSIGN_TASKS_MINUTE.get(config);
         TaskManager.BROADCAST_SECRET_KEEPER = SecretLifeConfig.BROADCAST_SECRET_KEEPER.get(config);
         TaskManager.CONSTANT_TASKS = SecretLifeConfig.CONSTANT_TASKS.get(config);
+        ONLY_LOSE_HEARTS_IN_SESSION = SecretLifeConfig.ONLY_LOSE_HEARTS_IN_SESSION.get(config);
     }
 
     @Override
@@ -332,10 +336,15 @@ public class SecretLife extends Season {
         }
     }
 
+    private long ticks = 0;
     @Override
     public void tick(MinecraftServer server) {
         super.tick(server);
         TaskManager.tick();
+        ticks++;
+        if (ticks % 20 == 0) {
+            checkNaturalRegeneration();
+        }
     }
 
     private Map<UUID, ItemStack> giveBookOnRespawn = new HashMap<>();
@@ -364,7 +373,9 @@ public class SecretLife extends Season {
     public void setPlayerHealth(ServerPlayerEntity player, double health) {
         if (player == null) return;
         if (health < 0.1) health = 0.1;
-        AttributeUtils.setMaxPlayerHealth(player, health);
+        if (canChangeHealth()) {
+            AttributeUtils.setMaxPlayerHealth(player, health);
+        }
         if (health > player.getHealth() && player.isAlive()) {
             player.setHealth((float) health);
         }
@@ -398,5 +409,27 @@ public class SecretLife extends Season {
         for (ServerPlayerEntity player : PlayerUtils.getAllPlayers()) {
             resetPlayerHealth(player);
         }
+    }
+
+    public boolean canChangeHealth() {
+        if (!ONLY_LOSE_HEARTS_IN_SESSION) return true;
+        return currentSession != null && currentSession.statusStarted();
+    }
+
+    @Override
+    public void sessionChangeStatus(SessionStatus newStatus) {
+        super.sessionChangeStatus(newStatus);
+        checkNaturalRegeneration();
+    }
+
+    public void checkNaturalRegeneration() {
+        if (server == null) return;
+        boolean naturalRegeneration = false;
+        if (ONLY_LOSE_HEARTS_IN_SESSION) {
+            if (!currentSession.statusStarted()) {
+                naturalRegeneration = true;
+            }
+        }
+        server.getGameRules().get(GameRules.NATURAL_REGENERATION).set(naturalRegeneration, server);
     }
 }

@@ -72,7 +72,7 @@ public class WildLifeConfig extends ConfigManager {
             "Change Multiplier", "The speed with which you change your size during Size Shifting."
     );
     public static final ConfigFileEntry<Boolean> WILDCARD_SIZESHIFTING_FIX_BUGS = new ConfigFileEntry<>(
-            "wildcard_sizeshifting_fix_bugs", true, "season.sizeshifting",
+            "wildcard_sizeshifting_fix_bugs", true, "season.sizeshifting[new]",
             "Fix Bugs", "Fixes the bug where you fall from blocks when shifting and when you get stuck on blocks when jumping."
     );
 

@@ -11,6 +11,7 @@ import net.mat0u5.lifeseries.seasons.other.WatcherManager;
 import net.mat0u5.lifeseries.seasons.season.doublelife.DoubleLife;
 import net.mat0u5.lifeseries.seasons.season.wildlife.WildLife;
 import net.mat0u5.lifeseries.seasons.secretsociety.SecretSociety;
+import net.mat0u5.lifeseries.seasons.session.SessionStatus;
 import net.mat0u5.lifeseries.seasons.session.SessionTranscript;
 import net.mat0u5.lifeseries.utils.other.OtherUtils;
 import net.mat0u5.lifeseries.utils.other.TaskScheduler;
@@ -55,7 +56,6 @@ public abstract class Season {
     public static final String RESOURCEPACK_MINIMAL_ARMOR_URL = "https://github.com/Mat0u5/LifeSeries-Resources/releases/download/release-minimal_armor-a4e7ddfa4558be90d6259e0d655f9589cb60dd88/minimal_armor.zip";
     public static final String RESOURCEPACK_MINIMAL_ARMOR_SHA ="1d349628ab6121691fa991770289d01458d561f4";
 
-    public boolean NO_HEALING = false;
     public int GIVELIFE_MAX_LIVES = 99;
     public boolean TAB_LIST_SHOW_DEAD_PLAYERS = true;
     public boolean TAB_LIST_SHOW_LIVES = false;
@@ -106,7 +106,7 @@ public abstract class Season {
 
         OtherUtils.executeCommand("worldborder set " + seasonConfig.WORLDBORDER_SIZE.get(seasonConfig));
         server.getGameRules().get(GameRules.KEEP_INVENTORY).set(seasonConfig.KEEP_INVENTORY.get(seasonConfig), server);
-        server.getGameRules().get(GameRules.NATURAL_REGENERATION).set(!NO_HEALING, server);
+        server.getGameRules().get(GameRules.NATURAL_REGENERATION).set(getSeason() != Seasons.SECRET_LIFE, server);
         server.getGameRules().get(GameRules.ANNOUNCE_ADVANCEMENTS).set(seasonConfig.SHOW_ADVANCEMENTS.get(seasonConfig), server);
 
         //? if >= 1.21.6 {
@@ -263,6 +263,9 @@ public abstract class Season {
         secretSociety.resetMembers();
         addSessionActions();
         return true;
+    }
+
+    public void sessionChangeStatus(SessionStatus newStatus) {
     }
 
     private long ticks = 0;

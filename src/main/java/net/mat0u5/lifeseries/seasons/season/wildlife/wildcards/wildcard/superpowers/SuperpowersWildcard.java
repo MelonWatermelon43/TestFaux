@@ -124,6 +124,9 @@ public class SuperpowersWildcard extends Wildcard {
     public static void rollRandomSuperpowerForPlayer(ServerPlayerEntity player) {
         List<Superpowers> implemented = new java.util.ArrayList<>(Superpowers.getImplemented());
         implemented.remove(Superpowers.NECROMANCY);
+        if (!VoicechatMain.isConnectedToSVC(player.getUuid())) {
+            implemented.remove(Superpowers.LISTENING);
+        }
         Collections.shuffle(implemented);
 
         Superpowers power = implemented.getFirst();

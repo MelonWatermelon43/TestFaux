@@ -19,6 +19,9 @@ import static net.mat0u5.lifeseries.Main.currentSeason;
 import static net.mat0u5.lifeseries.Main.livesManager;
 
 public class LastLifeLivesManager extends LivesManager {
+
+    public boolean assignedLives = false;
+
     public SessionAction actionChooseLives = new SessionAction(
             OtherUtils.minutesToTicks(1),"§7Assign lives if necessary §f[00:01:00]", "Assign lives if necessary"
     ) {
@@ -30,11 +33,11 @@ public class LastLifeLivesManager extends LivesManager {
     Random rnd = new Random();
 
     public void assignRandomLivesToUnassignedPlayers() {
+        assignedLives = true;
         List<ServerPlayerEntity> assignTo = new ArrayList<>();
         for (ServerPlayerEntity player : PlayerUtils.getAllFunctioningPlayers()) {
             if (livesManager.hasAssignedLives(player)) continue;
             assignTo.add(player);
-            PlayerUtils.broadcastMessageToAdmins(TextUtils.format("§7Assigning random lives to {}§7...", player));
         }
         if (assignTo.isEmpty()) return;
         assignRandomLives(assignTo);
@@ -138,5 +141,17 @@ public class LastLifeLivesManager extends LivesManager {
             }
         }
         return getRandomLife();
+    }
+
+    public void reset() {
+        assignedLives = false;
+    }
+
+    public void onPlayerFinishJoining(ServerPlayerEntity player) {
+        if (!assignedLives) return;
+        if (livesManager.hasAssignedLives(player)) return;
+        if (WatcherManager.isWatcher(player)) return;
+        PlayerUtils.broadcastMessageToAdmins(TextUtils.format("§7Assigning random lives to {}§7...", player));
+        assignRandomLives(new ArrayList<>(List.of(player)));
     }
 }

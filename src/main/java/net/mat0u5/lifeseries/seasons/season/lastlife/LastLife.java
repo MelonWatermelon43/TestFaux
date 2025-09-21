@@ -70,4 +70,28 @@ public class LastLife extends Season {
     public Integer getDefaultLives() {
         return null;
     }
+
+    @Override
+    public boolean sessionStart() {
+        if (livesManager instanceof LastLifeLivesManager lastLifeLivesManager) {
+            lastLifeLivesManager.reset();
+        }
+        return super.sessionStart();
+    }
+
+    @Override
+    public void sessionEnd() {
+        super.sessionEnd();
+        if (livesManager instanceof LastLifeLivesManager lastLifeLivesManager) {
+            lastLifeLivesManager.reset();
+        }
+    }
+
+    @Override
+    public void onPlayerFinishJoining(ServerPlayerEntity player) {
+        super.onPlayerFinishJoining(player);
+        if (livesManager instanceof LastLifeLivesManager lastLifeLivesManager) {
+            lastLifeLivesManager.onPlayerFinishJoining(player);
+        }
+    }
 }

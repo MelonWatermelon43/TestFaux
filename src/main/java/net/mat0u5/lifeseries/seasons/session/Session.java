@@ -39,7 +39,7 @@ public class Session {
 
     public Integer sessionLength = null;
     public double passedTime = 0;
-    public SessionStatus status = SessionStatus.NOT_STARTED;
+    private SessionStatus status = SessionStatus.NOT_STARTED;
 
     SessionAction endWarning1 = new SessionAction(OtherUtils.minutesToTicks(-5)) {
         @Override
@@ -64,7 +64,7 @@ public class Session {
         if (!canStartSession()) return false;
         clearSessionActions();
         if (!currentSeason.sessionStart()) return false;
-        status = SessionStatus.STARTED;
+        changeStatus(SessionStatus.STARTED);
         passedTime = 0;
         Text line1 = TextUtils.formatLoosely("§6Session started! §7[{}]", OtherUtils.formatTime(sessionLength));
         Text line2 = Text.literal("§f/session timer showDisplay§7 - toggles a session timer on your screen.");
@@ -103,7 +103,7 @@ public class Session {
             SessionTranscript.onSessionEnd();
             PlayerUtils.broadcastMessage(Text.literal("The session has ended!").formatted(Formatting.GOLD));
         }
-        status = SessionStatus.FINISHED;
+        changeStatus(SessionStatus.FINISHED);
         passedTime = 0;
         currentSeason.sessionEnd();
     }
@@ -111,11 +111,11 @@ public class Session {
     public void sessionPause() {
         if (statusPaused()) {
             PlayerUtils.broadcastMessage(Text.literal("Session unpaused!").formatted(Formatting.GOLD));
-            status = SessionStatus.STARTED;
+            changeStatus(SessionStatus.STARTED);
         }
         else {
             PlayerUtils.broadcastMessage(Text.literal("Session paused!").formatted(Formatting.GOLD));
-            status = SessionStatus.PAUSED;
+            changeStatus(SessionStatus.PAUSED);
         }
     }
 
@@ -370,5 +370,10 @@ public class Session {
 
     public boolean statusNotStarted() {
         return status == SessionStatus.NOT_STARTED;
+    }
+
+    public void changeStatus(SessionStatus newStatus) {
+        status = newStatus;
+        currentSeason.sessionChangeStatus(status);
     }
 }

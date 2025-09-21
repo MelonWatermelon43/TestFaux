@@ -3,6 +3,7 @@ package net.mat0u5.lifeseries.mixin;
 import net.mat0u5.lifeseries.Main;
 import net.mat0u5.lifeseries.events.Events;
 import net.mat0u5.lifeseries.seasons.other.WatcherManager;
+import net.mat0u5.lifeseries.seasons.season.secretlife.SecretLife;
 import net.mat0u5.lifeseries.seasons.season.wildlife.wildcards.wildcard.superpowers.Superpowers;
 import net.mat0u5.lifeseries.seasons.season.wildlife.wildcards.wildcard.superpowers.SuperpowersWildcard;
 import net.mat0u5.lifeseries.seasons.season.wildlife.wildcards.wildcard.superpowers.superpower.WindCharge;
@@ -39,7 +40,11 @@ public abstract class LivingEntityMixin {
     @Inject(method = "heal", at = @At("HEAD"), cancellable = true)
     private void onHealHead(float amount, CallbackInfo info) {
         if (!Main.isLogicalSide() || Main.modDisabled()) return;
-        if (!currentSeason.NO_HEALING) return;
+        if (currentSeason instanceof SecretLife secretLife) {
+            if (!secretLife.canChangeHealth()) {
+                return;
+            }
+        }
 
         LivingEntity entity = (LivingEntity) (Object) this;
         if (entity instanceof ServerPlayerEntity) {

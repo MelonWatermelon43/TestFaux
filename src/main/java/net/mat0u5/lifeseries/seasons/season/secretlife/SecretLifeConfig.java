@@ -95,6 +95,11 @@ public class SecretLifeConfig extends ConfigManager {
             "Constant Tasks", "Automatically gives players a new task when they have completed one."
     );
 
+    public static final ConfigFileEntry<Boolean> ONLY_LOSE_HEARTS_IN_SESSION = new ConfigFileEntry<>(
+            "only_lose_hearts_in_session", false, "season.health[new]",
+            "Only Lose Hearts In Session", "Makes players only lose hearts while a session is active."
+    );
+
     public static final ConfigFileEntry<Object> GROUP_HEALTH = new ConfigFileEntry<>(
             "group_health", null, ConfigTypes.TEXT, "{season.health}",
             "Health Rewards / Punishments", ""
@@ -116,6 +121,7 @@ public class SecretLifeConfig extends ConfigManager {
                 ,GROUP_HEALTH //Group
 
                 //Group stuff
+                ,ONLY_LOSE_HEARTS_IN_SESSION
                 ,TASK_HEALTH_EASY_PASS
                 ,TASK_HEALTH_EASY_FAIL
                 ,TASK_HEALTH_HARD_PASS
