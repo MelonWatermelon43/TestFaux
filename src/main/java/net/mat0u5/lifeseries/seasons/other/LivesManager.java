@@ -301,7 +301,9 @@ public class LivesManager {
 
 
     public void playerLostAllLives(ServerPlayerEntity player, Integer livesBefore) {
-        player.changeGameMode(GameMode.SPECTATOR);
+        if (livesBefore != null || WatcherManager.isWatcher(player)) {
+            player.changeGameMode(GameMode.SPECTATOR);
+        }
         Vec3d pos = player.getPos();
         HashMap<Vec3d, List<Float>> info = new HashMap<>();
         info.put(pos, List.of(player.getYaw(),player.getPitch()));

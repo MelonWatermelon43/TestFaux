@@ -338,16 +338,16 @@ public class BoogeymanManager {
                     ScoreboardUtils.setScore(ScoreHolder.fromName(boogeyman.name), LivesManager.SCOREBOARD_NAME, 1);
                     continue;
                 }
-                playerFailBoogeyman(player);
+                playerFailBoogeyman(player, true);
             }
         }
     }
 
-    public void playerFailBoogeymanManually(ServerPlayerEntity player) {
-        playerFailBoogeyman(player);
+    public void playerFailBoogeymanManually(ServerPlayerEntity player, boolean sendMessage) {
+        playerFailBoogeyman(player, sendMessage);
     }
 
-    public boolean playerFailBoogeyman(ServerPlayerEntity player) {
+    public boolean playerFailBoogeyman(ServerPlayerEntity player, boolean sendMessage) {
         if (!BOOGEYMAN_ENABLED) return false;
         Boogeyman boogeyman = getBoogeyman(player);
         if (boogeymen == null) return false;
@@ -356,7 +356,8 @@ public class BoogeymanManager {
 
         if (BOOGEYMAN_ADVANCED_DEATHS) {
             PlayerUtils.sendTitle(player,Text.of("§cThe curse consumes you.."), 20, 30, 20);
-            if (BOOGEYMAN_ANNOUNCE_OUTCOME) {
+            //TODO test
+            if (BOOGEYMAN_ANNOUNCE_OUTCOME && sendMessage) {
                 PlayerUtils.broadcastMessage(TextUtils.format("{}§7 failed to kill a player while being the §cBoogeyman§7. They have been consumed by the curse.", player));
             }
             AdvancedDeathsManager.setPlayerLives(player, 1);
@@ -364,7 +365,7 @@ public class BoogeymanManager {
         else {
             PlayerUtils.sendTitle(player,Text.of("§cYou have failed."), 20, 30, 20);
             PlayerUtils.playSoundToPlayer(player, SoundEvent.of(Identifier.of("minecraft","lastlife_boogeyman_fail")));
-            if (BOOGEYMAN_ANNOUNCE_OUTCOME) {
+            if (BOOGEYMAN_ANNOUNCE_OUTCOME && sendMessage) {
                 PlayerUtils.broadcastMessage(TextUtils.format("{}§7 failed to kill a player while being the §cBoogeyman§7. They have been dropped to their §cLast Life§7.", player));
             }
             livesManager.setPlayerLives(player, 1);
@@ -469,7 +470,7 @@ public class BoogeymanManager {
         if (boogeymanTime >= BOOGEYMAN_INFINITE_AUTO_FAIL) {
             ServerPlayerEntity player = boogeyman.getPlayer();
             if (player != null) {
-                if (!playerFailBoogeyman(player)) {
+                if (!playerFailBoogeyman(player, true)) {
                     boogeyman.failed = true;
                 }
             }

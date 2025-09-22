@@ -59,12 +59,12 @@ public class DoubleLifeBoogeymanManager extends BoogeymanManager {
     }
 
     @Override
-    public void playerFailBoogeymanManually(ServerPlayerEntity player) {
-        super.playerFailBoogeymanManually(player);
+    public void playerFailBoogeymanManually(ServerPlayerEntity player, boolean sendMessage) {
+        super.playerFailBoogeymanManually(player, sendMessage);
         if (currentSeason instanceof DoubleLife doubleLife && DoubleLife.SOULBOUND_BOOGEYMAN) {
             ServerPlayerEntity soulmate = doubleLife.getSoulmate(player);
             if (soulmate != null) {
-                super.playerFailBoogeymanManually(soulmate);
+                super.playerFailBoogeymanManually(soulmate, sendMessage);
             }
         }
     }
@@ -81,8 +81,8 @@ public class DoubleLifeBoogeymanManager extends BoogeymanManager {
     }
 
     @Override
-    public boolean playerFailBoogeyman(ServerPlayerEntity player) {
-        boolean returnValue = super.playerFailBoogeyman(player);
+    public boolean playerFailBoogeyman(ServerPlayerEntity player, boolean sendMessage) {
+        boolean returnValue = super.playerFailBoogeyman(player, sendMessage);
         if (currentSeason instanceof DoubleLife doubleLife) {
             doubleLife.syncSoulboundLives(player);
         }

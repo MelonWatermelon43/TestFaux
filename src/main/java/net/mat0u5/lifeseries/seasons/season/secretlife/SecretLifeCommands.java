@@ -88,9 +88,9 @@ public class SecretLifeCommands extends Command {
                 )
                 .then(literal("get")
                     .requires(PermissionManager::isAdmin)
-                    .then(argument("player", EntityArgumentType.player())
+                    .then(argument("player", EntityArgumentType.players())
                         .executes(context -> getHealthFor(
-                            context.getSource(), EntityArgumentType.getPlayer(context, "player"))
+                            context.getSource(), EntityArgumentType.getPlayers(context, "player"))
                         )
                     )
                 )
@@ -371,18 +371,26 @@ public class SecretLifeCommands extends Command {
         return 1;
     }
 
-    public int getHealthFor(ServerCommandSource source, ServerPlayerEntity target) {
+    public int getHealthFor(ServerCommandSource source, Collection<ServerPlayerEntity> targets) {
+        //TODO test
         if (checkBanned(source)) return -1;
-        if (target == null) return -1;
+        if (targets == null) return -1;
 
-        SecretLife secretLife = (SecretLife) currentSeason;
-        if (!livesManager.isAlive(target)) {
-            OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.format("{} is dead", target));
-            return -1;
+        if (targets.size() > 1) {
+            OtherUtils.sendCommandFeedbackQuiet(source, Text.of("Health of targets:"));
         }
 
-        double playerHealth = secretLife.getRoundedHealth(target);
-        OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.format("{} has {} health", target, playerHealth));
+        for (ServerPlayerEntity player : targets) {
+            SecretLife secretLife = (SecretLife) currentSeason;
+            if (!livesManager.isAlive(player)) {
+                OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.format("{} is dead", player));
+                return -1;
+            }
+
+            double playerHealth = secretLife.getRoundedHealth(player);
+            OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.format("{} has {} health", player, playerHealth));
+        }
+
         return 1;
     }
 

@@ -5,6 +5,7 @@ import net.mat0u5.lifeseries.command.manager.Command;
 import net.mat0u5.lifeseries.utils.other.OtherUtils;
 import net.mat0u5.lifeseries.utils.other.TextUtils;
 import net.mat0u5.lifeseries.utils.player.PermissionManager;
+import net.mat0u5.lifeseries.utils.player.PlayerUtils;
 import net.minecraft.command.argument.EntityArgumentType;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
@@ -31,43 +32,56 @@ public class BoogeymanCommand extends Command {
     public void register(CommandDispatcher<ServerCommandSource> dispatcher) {
         dispatcher.register(
             literal("boogeyman")
-                .requires(PermissionManager::isAdmin)
                 .then(literal("clear")
+                    .requires(PermissionManager::isAdmin)
                     .executes(context -> boogeyClear(
                         context.getSource()
                     ))
                 )
                 .then(literal("list")
+                    .requires(PermissionManager::isAdmin)
                     .executes(context -> boogeyList(
                         context.getSource()
                     ))
                 )
                 .then(literal("count")
+                    .requires(PermissionManager::isAdmin)
                     .executes(context -> boogeyCount(
                         context.getSource()
                     ))
                 )
                 .then(literal("add")
+                    .requires(PermissionManager::isAdmin)
                     .then(argument("player", EntityArgumentType.player())
                         .executes(context -> addBoogey(context.getSource(), EntityArgumentType.getPlayer(context, "player")))
                     )
                 )
                 .then(literal("remove")
+                    .requires(PermissionManager::isAdmin)
                     .then(argument("player", EntityArgumentType.player())
                         .executes(context -> removeBoogey(context.getSource(), EntityArgumentType.getPlayer(context, "player")))
                     )
                 )
                 .then(literal("cure")
+                    .requires(PermissionManager::isAdmin)
                     .then(argument("player", EntityArgumentType.player())
                         .executes(context -> cureBoogey(context.getSource(), EntityArgumentType.getPlayer(context, "player")))
                     )
                 )
                 .then(literal("fail")
                         .then(argument("player", EntityArgumentType.player())
+                                .requires(PermissionManager::isAdmin)
                                 .executes(context -> failBoogey(context.getSource(), EntityArgumentType.getPlayer(context, "player")))
                         )
                 )
+                .then(literal("selfFail")
+                        .then(literal("confirm")
+                                .executes(context -> selfFailBoogey(context.getSource(), true))
+                        )
+                        .executes(context -> selfFailBoogey(context.getSource(), false))
+                )
                 .then(literal("chooseRandom")
+                    .requires(PermissionManager::isAdmin)
                     .executes(context -> boogeyChooseRandom(
                         context.getSource()
                     ))
@@ -78,6 +92,34 @@ public class BoogeymanCommand extends Command {
 
     public BoogeymanManager getBM() {
         return currentSeason.boogeymanManager;
+    }
+
+    public int selfFailBoogey(ServerCommandSource source, boolean confirm) {
+        if (checkBanned(source)) return -1;
+        ServerPlayerEntity self = source.getPlayer();
+        if (self == null) return -1;
+        BoogeymanManager bm = getBM();
+        if (bm == null) return -1;
+
+        if (!bm.isBoogeyman(self)) {
+            source.sendError(Text.of("You are not a Boogeyman"));
+            return -1;
+        }
+        if (!confirm) {
+            source.sendError(Text.of("Warning: This will cause you to fail as the Boogeyman"));
+            source.sendError(Text.of("Run \"/boogeyman selfFail §lconfirm§l\" to confirm this action."));
+            return -1;
+        }
+
+        if (!bm.BOOGEYMAN_ANNOUNCE_OUTCOME) {
+            OtherUtils.sendCommandFeedback(source, Text.of("§7Failing as the Boogeyman..."));
+        }
+        else {
+            PlayerUtils.broadcastMessage(TextUtils.format("{}§7 voulentarily failed themselves as the Boogeyman. They have been consumed by the curse.", self));
+        }
+        bm.playerFailBoogeymanManually(self, false);
+
+        return 1;
     }
 
     public int failBoogey(ServerCommandSource source, ServerPlayerEntity target) {
@@ -94,7 +136,7 @@ public class BoogeymanCommand extends Command {
         if (!bm.BOOGEYMAN_ANNOUNCE_OUTCOME) {
             OtherUtils.sendCommandFeedback(source, TextUtils.format("§7Failing Boogeyman for {}§7...", target));
         }
-        bm.playerFailBoogeymanManually(target);
+        bm.playerFailBoogeymanManually(target, true);
 
         return 1;
     }

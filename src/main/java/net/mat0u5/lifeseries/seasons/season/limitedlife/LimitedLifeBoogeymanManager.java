@@ -51,12 +51,12 @@ public class LimitedLifeBoogeymanManager extends BoogeymanManager {
                     ScoreboardUtils.setScore(ScoreHolder.fromName(boogeyman.name), LivesManager.SCOREBOARD_NAME, LimitedLife.getNextLivesColorLives(currentLives));
                     continue;
                 }
-                playerFailBoogeyman(player);
+                playerFailBoogeyman(player, true);
             }
         }
     }
     @Override
-    public boolean playerFailBoogeyman(ServerPlayerEntity player) {
+    public boolean playerFailBoogeyman(ServerPlayerEntity player, boolean sendMessage) {
         if (!BOOGEYMAN_ENABLED) return false;
         Boogeyman boogeyman = getBoogeyman(player);
         if (boogeymen == null) return false;
@@ -69,7 +69,7 @@ public class LimitedLifeBoogeymanManager extends BoogeymanManager {
 
         if (BOOGEYMAN_ADVANCED_DEATHS) {
             PlayerUtils.sendTitle(player,Text.of("§cThe curse consumes you.."), 20, 30, 20);
-            if (BOOGEYMAN_ANNOUNCE_OUTCOME) {
+            if (BOOGEYMAN_ANNOUNCE_OUTCOME && sendMessage) {
                 PlayerUtils.broadcastMessage(TextUtils.format("{}§7 failed to kill a player while being the §cBoogeyman§7. They have been consumed by the curse.", player));
             }
             AdvancedDeathsManager.setPlayerLives(player, setToLives);
@@ -80,7 +80,7 @@ public class LimitedLifeBoogeymanManager extends BoogeymanManager {
 
             PlayerUtils.sendTitle(player,Text.of("§cYou have failed."), 20, 30, 20);
             PlayerUtils.playSoundToPlayer(player, SoundEvent.of(Identifier.of("minecraft","lastlife_boogeyman_fail")));
-            if (BOOGEYMAN_ANNOUNCE_OUTCOME) {
+            if (BOOGEYMAN_ANNOUNCE_OUTCOME && sendMessage) {
                 PlayerUtils.broadcastMessage(TextUtils.format("{}§7 failed to kill a player while being the §cBoogeyman§7. Their time has been dropped to {}", player, setTo));
             }
         }
