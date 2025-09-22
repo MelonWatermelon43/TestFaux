@@ -189,13 +189,7 @@ public class WildLifeCommands extends Command {
         if (player == null) return -1;
 
         PlayerUtils.broadcastMessageToAdmins(TextUtils.format("{}§7 requests their snail name to be §f{}§7", player, name));
-        Text adminText = Text.literal("§7Click ").append(
-                Text.literal("here")
-                        .styled(style -> style
-                                .withColor(Formatting.BLUE)
-                                .withClickEvent(TextUtils.runCommandClickEvent(TextUtils.formatString("/snail names set {} {}", player, name)))
-                                .withUnderline(true)
-                        )).append(Text.of("§7 to accept."));
+        Text adminText = TextUtils.format("§7Click {}§7 to accept.", TextUtils.runCommandText(TextUtils.formatString("/snail names set {} {}", player, name)));
         PlayerUtils.broadcastMessageToAdmins(adminText);
         return 1;
     }

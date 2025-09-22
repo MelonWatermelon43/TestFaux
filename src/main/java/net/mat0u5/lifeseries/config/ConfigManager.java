@@ -189,6 +189,7 @@ public abstract class ConfigManager extends DefaultConfigValues {
         renamedProperty("players_drop_items_on_last_death", "players_drop_items_on_final_death");
         renamedProperty("blacklist_banned_potions", "blacklist_banned_potion_effects");
         renamedProperty("auto_keep_inventory", "keep_inventory");
+        renamedProperty("beoadcast_secret_keeper", "broadcast_secret_keeper");
     }
 
     private void renamedProperty(String from, String to) {

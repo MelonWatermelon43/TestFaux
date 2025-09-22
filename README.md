@@ -176,6 +176,7 @@ This command **always** available
 - `/boogeyman cure <player>` - Cures `<player>` of the Boogeyman curse if they were the Boogeyman.
 - `/boogeyman fail <player>` - Makes `<player>` fail the Boogeyman curse if they were the Boogeyman.
 - `/boogeyman chooseRandom` - Chooses the Boogeyman / Boogeymen from the list of online players.
+- `/boogeyman selfFail` - Makes **you** instantly fail if you are the Boogeyman. *No permissions required.*
 </details>
 
 <details open>
@@ -225,6 +226,7 @@ This command **always** available
   - `/task assignRandom <player/s>` - Assigns a random task to `<player/s>`.
   - `/task clearTask <player>` - Clears the task book from `<player>`.
   - `/task set <player> <difficulty> <task>` - Sets the `<player>`'s task to be `<task>` on the next randomization.
+  - `/task get <player>` - Shows you if `<player>` has a task, and the task itself you want to.
 
 - `/soulmate` - *These commands are only available when playing Double Life.*
   - `/soulmate get <player>` - Shows you who `<player>`'s soulmate is.

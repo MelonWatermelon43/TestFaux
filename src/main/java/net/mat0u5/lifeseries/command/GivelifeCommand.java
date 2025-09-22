@@ -127,18 +127,8 @@ public class GivelifeCommand extends Command {
             soulmateGivelifeRequests.put(self.getUuid(), request);
         }
         OtherUtils.sendCommandFeedbackQuiet(source, Text.of("§7Your soulmate must accept your request to give a life to this player."));
-        soulmate.sendMessage(
-            TextUtils.format("Your soulmate wants to give a life to {}.\nClick ", target)
-                .append(
-                    Text.literal("here")
-                        .styled(style -> style
-                            .withColor(Formatting.BLUE)
-                            .withClickEvent(TextUtils.runCommandClickEvent(TextUtils.formatString("/givelife {}", target.getNameForScoreboard())))
-                            .withUnderline(true)
-                        )
-                )
-                .append(Text.of(" to accept the request."))
-        );
+        Text message = TextUtils.format("Your soulmate wants to give a life to {}.\nClick {} to accept the request.", target, TextUtils.runCommandText(TextUtils.formatString("/givelife {}", target.getNameForScoreboard())));
+        soulmate.sendMessage(message);
         return false;
     }
 }

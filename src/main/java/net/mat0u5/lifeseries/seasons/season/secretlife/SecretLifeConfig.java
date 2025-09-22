@@ -87,8 +87,12 @@ public class SecretLifeConfig extends ConfigManager {
             "Max Health After Killing", "The maximum health a player can have after killing a player (since killing gives hearts)."
     );
     public static final ConfigFileEntry<Boolean> BROADCAST_SECRET_KEEPER = new ConfigFileEntry<>(
-            "beoadcast_secret_keeper", false, "season",
+            "broadcast_secret_keeper", false, "season",
             "Secret Keeper Broadcast", "Makes the secret keeper broadcast a message in chat when someone succeeds, fails or rerolls a task."
+    );
+    public static final ConfigFileEntry<Boolean> BROADCAST_TASKS_WHEN_SUBMITTED = new ConfigFileEntry<>(
+            "broadcast_tasks_when_submitted", false, "season[new]",
+            "Broadcast Tasks When Submitted", "Gives an option for all players to view a task when it gets failed, rerolled or succeeded."
     );
     public static final ConfigFileEntry<Boolean> CONSTANT_TASKS = new ConfigFileEntry<>(
             "constant_tasks", false, "season",
@@ -105,6 +109,7 @@ public class SecretLifeConfig extends ConfigManager {
             "Health Rewards / Punishments", ""
     );
 
+
     public SecretLifeConfig() {
         super("./config/"+ Main.MOD_ID,"secretlife.properties");
     }
@@ -116,6 +121,7 @@ public class SecretLifeConfig extends ConfigManager {
                 ,ASSIGN_TASKS_MINUTE
                 ,MAX_PLAYER_KILL_HEALTH
                 ,BROADCAST_SECRET_KEEPER
+                ,BROADCAST_TASKS_WHEN_SUBMITTED
                 ,CONSTANT_TASKS
 
                 ,GROUP_HEALTH //Group

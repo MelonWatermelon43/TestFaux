@@ -56,3 +56,8 @@ This includes inventory data, xp, position, lives, double life soulmates, ....
 Player that die with unassigned lives no longer go into spectator mode.<br>
 Boogeymen can now run '/boogeyman selfFail' to fail themselves voulentarily.<br>
 The '/health get' command now accepts multiple targets.
+
+----------
+
+Added the '/task get <player>' command, which shows you if '<player>' has a task, and the task itself you want to.<br>
+Added the 'broadcast_tasks_when_submitted' Secret Life config. Default value is false.

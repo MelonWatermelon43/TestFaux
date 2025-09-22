@@ -190,13 +190,8 @@ public class UpdateChecker {
             return;
         }
         if (!VersionControl.isDevVersion()) {
-            Text discordText = Text.literal("§7Click ").append(
-                    Text.literal("here")
-                        .styled(style -> style
-                            .withColor(Formatting.BLUE)
-                            .withClickEvent(TextUtils.openURLClickEvent("https://discord.gg/QWJxfb4zQZ"))
-                            .withUnderline(true)
-                        )).append(Text.of("§7 to join the mod development discord if you have any questions, issues, requests, or if you just want to hang out :)\n"));
+            Text discordText = TextUtils.format("§7Click {}§7 to join the mod development discord if you have any questions, issues, requests, or if you just want to hang out :)\"", TextUtils.openURLText("https://discord.gg/QWJxfb4zQZ"));
+
             Text updateText =
                     TextUtils.formatLoosely("A new version of the Life Series Mod is available ({}) §nserver-side§f. \n",versionName)
                         .styled(style -> style
@@ -207,12 +202,7 @@ public class UpdateChecker {
                             )
                         )
                         .append(
-                            Text.literal("Click to download on Modrinth")
-                                .styled(style -> style
-                                    .withColor(Formatting.BLUE)
-                                        .withClickEvent(TextUtils.openURLClickEvent("https://modrinth.com/mod/life-series"))
-                                    .withUnderline(true)
-                                )
+                                TextUtils.clickableText("Click to download on Modrinth", TextUtils.openURLClickEvent("https://modrinth.com/mod/life-series"))
                         );
             if (PermissionManager.isAdmin(player)) {
                 player.sendMessage(updateText);
@@ -223,12 +213,7 @@ public class UpdateChecker {
             Text updateText =
                 Text.literal("§c[Life Series] You are playing on a developer version, there are probably some bugs, and it's possible that some features don't work.\n")
                     .append(
-                        Text.literal("Download full releases on Modrinth")
-                            .styled(style -> style
-                                .withColor(Formatting.BLUE)
-                                .withClickEvent(TextUtils.openURLClickEvent("https://modrinth.com/mod/life-series"))
-                                .withUnderline(true)
-                            )
+                        TextUtils.clickableText("Download full releases on Modrinth", TextUtils.openURLClickEvent("https://modrinth.com/mod/life-series"))
                     );
 
             player.sendMessage(updateText);

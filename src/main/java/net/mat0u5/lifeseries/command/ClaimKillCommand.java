@@ -89,13 +89,7 @@ public class ClaimKillCommand extends Command {
         Text textAll = TextUtils.format("{}§7 claims credit for {}§7's death.", player, victim);
         PlayerUtils.broadcastMessageToAdmins(textAll, 200);
         String validateCommand = TextUtils.formatString("/claimkill validate {} {}", player, victim);
-        Text adminText = Text.literal("§7Click ").append(
-                Text.literal("here")
-                        .styled(style -> style
-                                .withColor(Formatting.BLUE)
-                                .withClickEvent(TextUtils.runCommandClickEvent(validateCommand))
-                                .withUnderline(true)
-                        )).append(Text.of("§7 to accept the claim if you think it's valid."));
+        Text adminText = TextUtils.format("§7Click {}§7 to accept the claim if you think it's valid.", TextUtils.runCommandText(validateCommand));
         PlayerUtils.broadcastMessageToAdmins(adminText, 200);
 
         return 1;

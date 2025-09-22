@@ -212,12 +212,6 @@ public class SessionTranscript {
     }
 
     public static Text getTranscriptMessage() {
-        return Text.literal("§7Click ").append(
-                Text.literal("here")
-                        .styled(style -> style
-                                .withColor(Formatting.BLUE)
-                                .withClickEvent(TextUtils.copyClipboardClickEvent(SessionTranscript.getStats()))
-                                .withUnderline(true)
-                        )).append(Text.of("§7 to copy the session transcript."));
+        return TextUtils.format("§7Click {}§7 to copy the session transcript.", TextUtils.copyClipboardText(SessionTranscript.getStats()));
     }
 }

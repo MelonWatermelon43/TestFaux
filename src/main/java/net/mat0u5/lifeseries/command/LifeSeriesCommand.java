@@ -154,13 +154,7 @@ public class LifeSeriesCommand extends Command {
 
     public int getWorlds(ServerCommandSource source) {
         if (checkBanned(source)) return -1;
-        Text worldSavesText = Text.literal("§7If you want to play on the exact same world seeds as Grian did, click ").append(
-                Text.literal("here")
-                        .styled(style -> style
-                                .withColor(Formatting.BLUE)
-                                .withClickEvent(TextUtils.openURLClickEvent("https://www.dropbox.com/scl/fo/jk9fhqx0jjbgeo2qa6v5i/AOZZxMx6S7MlS9HrIRJkkX4?rlkey=2khwcnf2zhgi6s4ik01e3z9d0&st=ghw1d8k6&dl=0"))
-                                .withUnderline(true)
-                        )).append(Text.of("§7 to open a dropbox where you can download the pre-made worlds."));
+        Text worldSavesText = TextUtils.format("§7If you want to play on the exact same world seeds as Grian did, click {}§7 to open a dropbox where you can download the pre-made worlds.", TextUtils.openURLText("https://www.dropbox.com/scl/fo/jk9fhqx0jjbgeo2qa6v5i/AOZZxMx6S7MlS9HrIRJkkX4?rlkey=2khwcnf2zhgi6s4ik01e3z9d0&st=ghw1d8k6&dl=0"));
         OtherUtils.sendCommandFeedbackQuiet(source, worldSavesText);
         return 1;
     }
@@ -173,13 +167,7 @@ public class LifeSeriesCommand extends Command {
 
     public int getDiscord(ServerCommandSource source) {
         if (checkBanned(source)) return -1;
-        Text text = Text.literal("§7Click ").append(
-                Text.literal("here")
-                        .styled(style -> style
-                                .withColor(Formatting.BLUE)
-                                .withClickEvent(TextUtils.openURLClickEvent("https://discord.gg/QWJxfb4zQZ"))
-                                .withUnderline(true)
-                        )).append(Text.of("§7 to join the mod development discord if you have any questions, issues, requests, or if you just want to hang out :)"));
+        Text text = TextUtils.format("§7Click {}§7 to join the mod development discord if you have any questions, issues, requests, or if you just want to hang out :)\"", TextUtils.openURLText("https://discord.gg/QWJxfb4zQZ"));
         OtherUtils.sendCommandFeedbackQuiet(source, text);
         return 1;
     }

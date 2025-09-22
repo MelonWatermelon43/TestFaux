@@ -122,6 +122,36 @@ public class TextUtils {
         *///?}
     }
 
+    //TODO test all texts
+    public static Text selfMessageText(String message) {
+        return runCommandText("/selfmsg " + message);
+    }
+
+    public static Text runCommandText(String command) {
+        return hereText(runCommandClickEvent(command));
+    }
+
+    public static Text openURLText(String url) {
+        return hereText(openURLClickEvent(url));
+    }
+
+    public static Text copyClipboardText(String copy) {
+        return hereText(copyClipboardClickEvent(copy));
+    }
+
+    public static Text hereText(ClickEvent event) {
+        return clickableText("here", event);
+    }
+
+    public static Text clickableText(String label, ClickEvent event) {
+        return Text.literal(label)
+                .styled(style -> style
+                        .withColor(Formatting.BLUE)
+                        .withClickEvent(event)
+                        .withUnderline(true)
+                );
+    }
+
 
     public static MutableText formatPlain(String template, Object... args) {
         return Text.literal(formatString(template, args));

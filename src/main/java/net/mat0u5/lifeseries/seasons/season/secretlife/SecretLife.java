@@ -103,6 +103,7 @@ public class SecretLife extends Season {
         TaskManager.ASSIGN_TASKS_MINUTE = SecretLifeConfig.ASSIGN_TASKS_MINUTE.get(config);
         TaskManager.BROADCAST_SECRET_KEEPER = SecretLifeConfig.BROADCAST_SECRET_KEEPER.get(config);
         TaskManager.CONSTANT_TASKS = SecretLifeConfig.CONSTANT_TASKS.get(config);
+        TaskManager.PUBLIC_TASKS_ON_SUBMIT = SecretLifeConfig.BROADCAST_TASKS_WHEN_SUBMITTED.get(config);
         ONLY_LOSE_HEARTS_IN_SESSION = SecretLifeConfig.ONLY_LOSE_HEARTS_IN_SESSION.get(config);
     }
 

@@ -71,13 +71,7 @@ public class UnassignedSeason extends Season {
         PlayerUtils.broadcastMessage(Text.literal("[LifeSeries] You must select a season with ").formatted(Formatting.RED)
                 .append(Text.literal("'/lifeseries setSeries <series>'").formatted(Formatting.GRAY)), 120);
         PlayerUtils.broadcastMessage(Text.literal("You must have §noperator permissions§r to use most commands in this mod.").formatted(Formatting.RED), 120);
-        Text text = Text.literal("§7Click ").append(
-                Text.literal("here")
-                        .styled(style -> style
-                                .withColor(Formatting.BLUE)
-                                .withClickEvent(TextUtils.openURLClickEvent("https://discord.gg/QWJxfb4zQZ"))
-                                .withUnderline(true)
-                        )).append(Text.of("§7 to join the mod development discord if you have any questions, issues, requests, or if you just want to hang out :)"));
+        Text text = TextUtils.format("§7Click {}§7 to join the mod development discord if you have any questions, issues, requests, or if you just want to hang out :)\"", TextUtils.openURLText("https://discord.gg/QWJxfb4zQZ"));
         PlayerUtils.broadcastMessage(text, 120);
     }
 }

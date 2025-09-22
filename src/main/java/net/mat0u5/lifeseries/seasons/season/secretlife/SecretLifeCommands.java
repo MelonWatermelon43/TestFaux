@@ -17,6 +17,7 @@ import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.sound.SoundEvent;
 import net.minecraft.text.Text;
+import net.minecraft.util.Formatting;
 import net.minecraft.util.Identifier;
 
 import java.util.ArrayList;
@@ -157,6 +158,13 @@ public class SecretLifeCommands extends Command {
                                     )
                             )
                     )
+                    .then(literal("get")
+                            .then(argument("player", EntityArgumentType.player())
+                                    .executes(context -> getTask(
+                                            context.getSource(), EntityArgumentType.getPlayer(context, "player"))
+                                    )
+                            )
+                    )
         );
         dispatcher.register(
             literal("gift")
@@ -175,6 +183,46 @@ public class SecretLifeCommands extends Command {
                     )
                 )
         );
+    }
+
+    public int getTask(ServerCommandSource source, ServerPlayerEntity player) {
+        //TODO test
+        if (checkBanned(source)) return -1;
+        if (player == null) return -1;
+
+        boolean hasPreassignedTask = !TaskManager.preAssignedTasks.containsKey(player.getUuid());
+        boolean hasTaskBook = TaskManager.hasTaskBookCheck(player, false);
+
+        if (!hasTaskBook && !hasPreassignedTask) {
+            source.sendMessage(TextUtils.formatPlain("{} does not have a rawTask book in their inventory nor a pre-assigned rawTask", player));
+            return -1;
+        }
+
+        String rawTask = "";
+        Task task = null;
+
+        if (hasTaskBook) {
+            OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.format("{} has a rawTask book in their inventory", player));
+            task = TaskManager.assignedTasks.get(player.getUuid());
+        }
+        else {
+            //Pre-assigned task
+            OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.format("{} has a pre-assigned rawTask", player));
+            task = TaskManager.preAssignedTasks.get(player.getUuid());
+        }
+
+        if (!task.formattedTask.isEmpty()) {
+            rawTask = task.formattedTask;
+        }
+        else {
+            rawTask = task.rawTask;
+        }
+
+        if (!rawTask.isEmpty()) {
+            OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.format("§7Click {} §7 to show the task they have.", TextUtils.selfMessageText(rawTask)));
+        }
+
+        return 1;
     }
 
     public int setTask(ServerCommandSource source, Collection<ServerPlayerEntity> targets, String type, String task) {

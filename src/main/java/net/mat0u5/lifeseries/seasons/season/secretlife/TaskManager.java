@@ -45,6 +45,7 @@ public class TaskManager {
     public static double ASSIGN_TASKS_MINUTE = 1;
     public static boolean BROADCAST_SECRET_KEEPER = false;
     public static boolean CONSTANT_TASKS = false;
+    public static boolean PUBLIC_TASKS_ON_SUBMIT = false;
 
     public static BlockPos successButtonPos;
     public static BlockPos rerollButtonPos;
@@ -58,6 +59,7 @@ public class TaskManager {
     public static StringListConfig usedTasksConfig;
     public static SecretLifeLocationConfig locationsConfig;
     public static Map<UUID, Task> preAssignedTasks = new HashMap<>();
+    public static Map<UUID, Task> assignedTasks = new HashMap<>();
 
     public static List<String> easyTasks;
     public static List<String> hardTasks;
@@ -196,6 +198,7 @@ public class TaskManager {
         if (!player.giveItemStack(book)) {
             ItemStackUtils.spawnItemForPlayer(PlayerUtils.getServerWorld(player), player.getPos(), book, player);
         }
+        assignedTasks.put(player.getUuid(), task);
     }
 
     public static void assignRandomTasks(List<ServerPlayerEntity> allowedPlayers, TaskTypes type) {
@@ -352,12 +355,38 @@ public class TaskManager {
         return true;
     }
 
-    public static boolean hasTaskBookCheck(ServerPlayerEntity player, TaskTypes type, boolean sendMessage) {
+    public static boolean hasTaskBookCheck(ServerPlayerEntity player, boolean sendMessage) {
+        TaskTypes type = getPlayersTaskType(player);
         if (type != null) return true;
         if (sendMessage) {
             player.sendMessage(Text.of("§cYou do not have a secret task book in your inventory."));
         }
         return false;
+    }
+
+    public static void sendPublicTaskMessage(ServerPlayerEntity player) {
+        //TODO test
+        String rawTask = "";
+
+        Task task = null;
+
+        if (hasTaskBookCheck(player, false)) {
+            task = assignedTasks.get(player.getUuid());
+        }
+        else if (preAssignedTasks.containsKey(player.getUuid())) {
+            task = preAssignedTasks.get(player.getUuid());
+        }
+
+        if (task == null) return;
+
+        if (!task.formattedTask.isEmpty()) {
+            rawTask = task.formattedTask;
+        }
+        else {
+            rawTask = task.rawTask;
+        }
+
+        PlayerUtils.broadcastMessage(TextUtils.format("§7Click {}§7 to see what {}§7's task was.", TextUtils.selfMessageText(rawTask), player));
     }
 
     public static void succeedTask(ServerPlayerEntity player, boolean fromCommand) {
@@ -366,11 +395,13 @@ public class TaskManager {
             if (!hasSessionStarted(player)) return;
             if (isBeingUsed(player)) return;
         }
-        SecretLife season = (SecretLife) currentSeason;
         TaskTypes type = getPlayersTaskType(player);
-        if (!hasTaskBookCheck(player, type, !fromCommand)) return;
+        if (!hasTaskBookCheck(player, !fromCommand)) return;
         if (BROADCAST_SECRET_KEEPER) {
             PlayerUtils.broadcastMessage(TextUtils.format("{}§a succeeded their task.", player));
+        }
+        if (PUBLIC_TASKS_ON_SUBMIT) {
+            sendPublicTaskMessage(player);
         }
         SessionTranscript.successTask(player);
         removePlayersTaskBook(player);
@@ -405,7 +436,7 @@ public class TaskManager {
             if (isBeingUsed(player)) return;
         }
         TaskTypes type = getPlayersTaskType(player);
-        if (!hasTaskBookCheck(player, type, !fromCommand)) return;
+        if (!hasTaskBookCheck(player, !fromCommand)) return;
         if (type == TaskTypes.RED) {
             failTask(player, false);
             return;
@@ -414,6 +445,9 @@ public class TaskManager {
             removePlayersTaskBook(player);
             if (BROADCAST_SECRET_KEEPER) {
                 PlayerUtils.broadcastMessage(TextUtils.format("{}§7 re-rolled their easy task.", player));
+            }
+            if (PUBLIC_TASKS_ON_SUBMIT) {
+                sendPublicTaskMessage(player);
             }
             SessionTranscript.rerollTask(player);
             secretKeeperBeingUsed = true;
@@ -463,9 +497,12 @@ public class TaskManager {
         }
         SecretLife season = (SecretLife) currentSeason;
         TaskTypes type = getPlayersTaskType(player);
-        if (!hasTaskBookCheck(player, type, !fromCommand)) return;
+        if (!hasTaskBookCheck(player, !fromCommand)) return;
         if (BROADCAST_SECRET_KEEPER) {
             PlayerUtils.broadcastMessage(TextUtils.format("{}§c failed their task.", player));
+        }
+        if (PUBLIC_TASKS_ON_SUBMIT) {
+            sendPublicTaskMessage(player);
         }
         SessionTranscript.failTask(player);
         removePlayersTaskBook(player);

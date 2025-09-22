@@ -17,6 +17,7 @@ public class Task {
     public boolean anyPlayers = true;
     public boolean anyGreenPlayers = true;
     public boolean anyYellowPlayers = true;
+    public String formattedTask = "";
     public Task(String task, TaskTypes type) {
         this.rawTask = task;
         this.type = type;
@@ -48,10 +49,19 @@ public class Task {
     ${kill_not_permitted} - For red tasks. If its present, and the task owner kills a person, they will NOT get the 10 hearts for killing someone.
      */
     public List<RawFilteredPair<Text>> getBookLines(ServerPlayerEntity owner) {
+        formattedTask = "";
         List<RawFilteredPair<Text>> lines = new ArrayList<>();
+        int pageNum = 0;
         for (String page : rawTask.split("\\\\p")) {
             page = formatString(owner, page);
             lines.add(RawFilteredPair.of(Text.of(page)));
+
+            if (pageNum != 0) {
+                formattedTask += "\n";
+            }
+            formattedTask += page;
+
+            pageNum++;
         }
         return lines;
     }

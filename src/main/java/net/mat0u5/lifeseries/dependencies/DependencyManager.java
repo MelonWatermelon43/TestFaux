@@ -34,28 +34,12 @@ public class DependencyManager {
 
     public static boolean checkWildLifeDependencies() {
         if (!polymerLoaded()) {
-            PlayerUtils.broadcastMessage(
-                    Text.literal("§cYou must install the ").append(
-                            Text.literal("Polymer mod")
-                                    .styled(style -> style
-                                            .withColor(Formatting.BLUE)
-                                            .withClickEvent(TextUtils.openURLClickEvent("https://modrinth.com/mod/polymer"))
-                                            .withUnderline(true)
-                                    )
-                    ).append(Text.of(" §cto play Wild Life."))
-            );
+            Text text = TextUtils.format("§cYou must install the {} §cto play Wild Life.", TextUtils.clickableText("Polymer mod", TextUtils.openURLClickEvent("https://modrinth.com/mod/polymer")));
+            PlayerUtils.broadcastMessage(text);
         }
         if (!blockbenchImportLibraryLoaded()) {
-            PlayerUtils.broadcastMessage(
-                    Text.literal("§cYou must install the ").append(
-                            Text.literal("Blockbench Import Library mod")
-                                    .styled(style -> style
-                                            .withColor(Formatting.BLUE)
-                                            .withClickEvent(TextUtils.openURLClickEvent("https://modrinth.com/mod/blockbench-import-library"))
-                                            .withUnderline(true)
-                                    )
-                    ).append(Text.of(" §cto play Wild Life."))
-            );
+            Text text = TextUtils.format("§cYou must install the {} §cto play Wild Life.", TextUtils.clickableText("Blockbench Import Library mod", TextUtils.openURLClickEvent("https://modrinth.com/mod/blockbench-import-library")));
+            PlayerUtils.broadcastMessage(text);
         }
         return wildLifeModsLoaded();
     }
