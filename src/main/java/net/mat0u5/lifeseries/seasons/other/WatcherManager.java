@@ -53,7 +53,7 @@ public class WatcherManager {
         }
         player.sendMessage(Text.of("§7§nYou are now a Watcher.\n"));
         player.sendMessage(Text.of("§7Watchers are players that are online, but are not affected by most season mechanics. They can only observe - this is very useful for spectators and for admins."));
-        player.sendMessage(Text.of("§8§oNOTE: This is an experimental feature, report any bugs you find!"));
+        //player.sendMessage(Text.of("§8§oNOTE: This is an experimental feature, report any bugs you find!"));
     }
 
     public static void removeWatcher(ServerPlayerEntity player) {

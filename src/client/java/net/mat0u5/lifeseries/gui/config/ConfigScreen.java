@@ -22,6 +22,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+//? if >= 1.21.9 {
+/*import net.minecraft.client.gui.Click;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
+*///?}
+
 public class ConfigScreen extends Screen {
     private static int HEADER_HEIGHT_SMALL = 55;
     private static int HEADER_HEIGHT_LARGE = 75;
@@ -315,9 +321,20 @@ public class ConfigScreen extends Screen {
         }
     }
 
+    //? if <= 1.21.6 {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        boolean leftClick = button == 0;
         if (this.searchField.mouseClicked(mouseX, mouseY, button)) {
+    //?} else {
+    /*@Override
+    public boolean mouseClicked(Click click, boolean doubled) {
+        int mouseX = (int) click.x();
+        int mouseY = (int) click.y();
+        boolean leftClick = click.isLeft();
+
+        if (this.searchField.mouseClicked(click, doubled)) {
+    *///?}
             focusSearch();
             return true;
         }
@@ -325,7 +342,7 @@ public class ConfigScreen extends Screen {
             this.searchField.setFocused(false);
         }
 
-        if (this.categoryNames.size() > 1 && button == 0) {
+        if (this.categoryNames.size() > 1 && leftClick) {
             int tabWidth = Math.min(HEADER_CATEGORY_MIN_WIDTH, this.width / this.categoryNames.size());
             int startX = (this.width - ((tabWidth+HEADER_CATEGORY_GAP) * this.categoryNames.size())) / 2;
 
@@ -341,13 +358,24 @@ public class ConfigScreen extends Screen {
                 }
             }
         }
-
+        //? if <= 1.21.6 {
         return super.mouseClicked(mouseX, mouseY, button);
+        //?} else {
+        /*return super.mouseClicked(click, doubled);
+        *///?}
     }
 
+    //? if <= 1.21.6 {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if (this.searchField.isFocused() && this.searchField.keyPressed(keyCode, scanCode, modifiers)) {
+    //?} else {
+    /*@Override
+    public boolean keyPressed(KeyInput keyInput) {
+        int keyCode = keyInput.getKeycode();
+        int modifiers = keyInput.modifiers();
+        if (this.searchField.isFocused() && this.searchField.keyPressed(keyInput)) {
+    *///?}
             return true;
         }
 
@@ -357,9 +385,14 @@ public class ConfigScreen extends Screen {
             return true;
         }
 
+        //? if <= 1.21.6 {
         return super.keyPressed(keyCode, scanCode, modifiers);
+        //?} else {
+        /*return super.keyPressed(keyInput);
+        *///?}
     }
 
+    //? if <= 1.21.6 {
     @Override
     public boolean charTyped(char chr, int modifiers) {
         if (this.searchField.isFocused() && this.searchField.charTyped(chr, modifiers)) {
@@ -367,6 +400,15 @@ public class ConfigScreen extends Screen {
         }
         return super.charTyped(chr, modifiers);
     }
+    //?} else {
+    /*@Override
+    public boolean charTyped(CharInput charInput) {
+        if (this.searchField.isFocused() && this.searchField.charTyped(charInput)) {
+            return true;
+        }
+        return super.charTyped(charInput);
+    }
+    *///?}
 
     public void focusSearch() {
         if (focusedEntry != null) {

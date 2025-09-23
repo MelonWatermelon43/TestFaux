@@ -12,6 +12,12 @@ import net.minecraft.text.Text;
 import java.util.ArrayList;
 import java.util.List;
 
+//? if >= 1.21.9 {
+/*import net.minecraft.client.gui.Click;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
+*///?}
+
 public class GroupConfigEntry<T extends ConfigEntry & IEntryGroupHeader> extends EmptyConfigEntry {
     private static final int CHILD_INDENT = 20;
     protected static final int EXPAND_TEXT_OFFSET_X = LABEL_OFFSET_X - 10;
@@ -140,14 +146,24 @@ public class GroupConfigEntry<T extends ConfigEntry & IEntryGroupHeader> extends
     }
 
     @Override
+    //? if <= 1.21.6 {
     protected boolean mouseClickedEntry(double mouseX, double mouseY, int button) {
+    //?} else {
+    /*protected boolean mouseClickedEntry(Click click, boolean doubled) {
+        int mouseX = (int) click.x();
+        int mouseY = (int) click.y();
+    *///?}
         int currentY = (int) mouseY - this.y;
 
         if (currentY < 0 || mainEntry == null) return false;
 
         if (currentY <= mainEntry.getPreferredHeight()) {
             mainEntry.setFocused(true);
+            //? if <= 1.21.6 {
             if (mainEntry.mouseClicked(mouseX, mouseY, button)) return true;
+            //?} else {
+            /*if (mainEntry.mouseClicked(click, doubled)) return true;
+            *///?}
         }
 
         if (isExpanded) {
@@ -157,7 +173,11 @@ public class GroupConfigEntry<T extends ConfigEntry & IEntryGroupHeader> extends
                 if ((childY+childHeight + ConfigListWidget.ENTRY_GAP) - 10 <= currentY+currentHeight) {
                     if (currentY >= childY && currentY < childY + childHeight) {
                         child.setFocused(true);
+                        //? if <= 1.21.6 {
                         if (child.mouseClicked(mouseX, mouseY, button)) return true;
+                        //?} else {
+                        /*if (child.mouseClicked(click, doubled)) return true;
+                        *///?}
                     }
                 }
                 childY += childHeight;
@@ -168,9 +188,17 @@ public class GroupConfigEntry<T extends ConfigEntry & IEntryGroupHeader> extends
     }
 
     @Override
+    //? if <= 1.21.6 {
     protected boolean keyPressedEntry(int keyCode, int scanCode, int modifiers) {
+    //?} else {
+    /*protected boolean keyPressedEntry(KeyInput input) {
+    *///?}
         if (mainEntry != null && mainEntry.isFocused()) {
+            //? if <= 1.21.6 {
             if (mainEntry.keyPressed(keyCode, scanCode, modifiers)) {
+            //?} else {
+            /*if (mainEntry.keyPressed(input)) {
+            *///?}
                 return true;
             }
         }
@@ -178,7 +206,11 @@ public class GroupConfigEntry<T extends ConfigEntry & IEntryGroupHeader> extends
         if (isExpanded) {
             for (ConfigEntry child : childEntries) {
                 if (!child.isFocused()) continue;
+                //? if <= 1.21.6 {
                 if (child.keyPressed(keyCode, scanCode, modifiers)) {
+                //?} else {
+                /*if (child.keyPressed(input)) {
+                *///?}
                     return true;
                 }
             }
@@ -188,9 +220,17 @@ public class GroupConfigEntry<T extends ConfigEntry & IEntryGroupHeader> extends
     }
 
     @Override
+    //? if <= 1.21.6 {
     protected boolean charTypedEntry(char chr, int modifiers) {
+    //?} else {
+    /*protected boolean charTypedEntry(CharInput input) {
+    *///?}
         if (mainEntry != null && mainEntry.isFocused()) {
+            //? if <= 1.21.6 {
             if (mainEntry.charTyped(chr, modifiers)) {
+            //?} else {
+            /*if (mainEntry.charTyped(input)) {
+            *///?}
                 return true;
             }
         }
@@ -198,7 +238,11 @@ public class GroupConfigEntry<T extends ConfigEntry & IEntryGroupHeader> extends
         if (isExpanded) {
             for (ConfigEntry child : childEntries) {
                 if (!child.isFocused()) continue;
+                //? if <= 1.21.6 {
                 if (child.charTyped(chr, modifiers)) {
+                //?} else {
+                /*if (child.charTyped(input)) {
+                *///?}
                     return true;
                 }
             }

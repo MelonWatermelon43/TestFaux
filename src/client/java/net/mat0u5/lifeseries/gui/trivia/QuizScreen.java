@@ -36,6 +36,8 @@ import net.minecraft.client.render.entity.EntityRenderDispatcher;
 //? if >= 1.21.9
 /*import net.minecraft.client.render.entity.EntityRenderManager;*/
 
+//? if >= 1.21.9
+/*import net.minecraft.client.gui.Click;*/
 public class QuizScreen extends DefaultScreen {
     //? if >= 1.21.6 {
     /*private static final Identifier TEXTURE_TRIVIABOT = Identifier.of("lifeseries","textures/gui/triviabot.png");
@@ -114,8 +116,15 @@ public class QuizScreen extends DefaultScreen {
     }
 
     @Override
+    //? if <= 1.21.6 {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0) { // Left-click
+    //?} else {
+    /*public boolean mouseClicked(Click click, boolean doubled) {
+        double mouseX = click.x();
+        double mouseY = click.y();
+        if (click.isLeft()) { // Left-click
+    *///?}
             for (int i = 0; i < answerRects.size(); i++) {
                 if (answerRects.get(i).contains(mouseX, mouseY)) {
                     if (this.client != null) this.client.setScreen(new ConfirmQuizAnswerScreen(this, i));
@@ -123,7 +132,11 @@ public class QuizScreen extends DefaultScreen {
                 }
             }
         }
+        //? if <= 1.21.6 {
         return super.mouseClicked(mouseX, mouseY, button);
+        //?} else {
+        /*return super.mouseClicked(click, doubled);
+        *///?}
     }
 
     @Override

@@ -17,6 +17,7 @@ import net.minecraft.component.DataComponentTypes;
 import net.minecraft.component.type.NbtComponent;
 import net.minecraft.component.type.PotionContentsComponent;
 import net.minecraft.enchantment.Enchantments;
+import net.minecraft.entity.EntityType;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.entity.damage.DamageSource;
 import net.minecraft.entity.effect.StatusEffects;
@@ -374,7 +375,7 @@ public class SecretLife extends Season {
     public void setPlayerHealth(ServerPlayerEntity player, double health) {
         if (player == null) return;
         if (health < 0.1) health = 0.1;
-        if (canChangeHealth()) {
+        if (canChangeHealth() || (health > getPlayerHealth(player))) {
             AttributeUtils.setMaxPlayerHealth(player, health);
         }
         if (health > player.getHealth() && player.isAlive()) {

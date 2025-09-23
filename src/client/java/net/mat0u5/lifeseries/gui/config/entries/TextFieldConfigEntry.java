@@ -6,6 +6,11 @@ import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.text.Text;
 
 import java.util.Objects;
+//? if >= 1.21.9 {
+/*import net.minecraft.client.gui.Click;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
+*///?}
 
 public abstract class TextFieldConfigEntry extends ConfigEntry {
     protected final TextFieldWidget textField;
@@ -85,6 +90,7 @@ public abstract class TextFieldConfigEntry extends ConfigEntry {
         textField.setFocused(focused);
     }
 
+    //? if <= 1.21.6 {
     @Override
     protected boolean mouseClickedEntry(double mouseX, double mouseY, int button) {
         textField.mouseClicked(mouseX, mouseY, button);
@@ -100,6 +106,23 @@ public abstract class TextFieldConfigEntry extends ConfigEntry {
     protected boolean charTypedEntry(char chr, int modifiers) {
         return textField.charTyped(chr, modifiers);
     }
+    //?} else {
+    /*@Override
+    protected boolean mouseClickedEntry(Click click, boolean doubled) {
+        textField.mouseClicked(click, doubled);
+        return true;
+    }
+
+    @Override
+    protected boolean keyPressedEntry(KeyInput input) {
+        return textField.keyPressed(input);
+    }
+
+    @Override
+    protected boolean charTypedEntry(CharInput input) {
+        return textField.charTyped(input);
+    }
+    *///?}
 
     @Override
     protected void resetToDefault() {

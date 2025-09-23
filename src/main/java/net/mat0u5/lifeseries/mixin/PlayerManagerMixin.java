@@ -24,6 +24,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.function.Function;
 import java.util.function.Predicate;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import static net.mat0u5.lifeseries.Main.currentSeason;
 //? if <= 1.21.5
 import net.minecraft.nbt.NbtCompound;
 //? if >= 1.21.6 {
@@ -33,9 +35,6 @@ import net.minecraft.storage.ReadView;
 //? if <= 1.21.6 {
 import net.mat0u5.lifeseries.entity.fakeplayer.FakePlayer;
 import java.util.Optional;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-
-import static net.mat0u5.lifeseries.Main.currentSeason;
 //?}
 
 @Mixin(value = PlayerManager.class, priority = 1)

@@ -7,6 +7,7 @@ import net.mat0u5.lifeseries.seasons.season.Seasons;
 import net.mat0u5.lifeseries.seasons.season.wildlife.wildcards.Wildcards;
 import net.mat0u5.lifeseries.utils.ClientUtils;
 import net.mat0u5.lifeseries.utils.other.OtherUtils;
+import net.mat0u5.lifeseries.utils.player.PlayerUtils;
 import net.minecraft.client.network.ClientPlayerEntity;
 import net.minecraft.entity.EntityDimensions;
 import net.minecraft.entity.LivingEntity;
@@ -58,7 +59,7 @@ public class LivingEntityMixin {
         LivingEntity entity = (LivingEntity) (Object) this;
         if (entity instanceof PlayerEntity playerr && MainClient.isClientPlayer(playerr.getUuid()) && playerr.isOnGround() && ClientEvents.onGroundFor >= 5) {
             BlockPos blockPos = playerr.getVelocityAffectingPos();
-            float originalSlipperiness = playerr.getWorld().getBlockState(blockPos).getBlock().getSlipperiness();
+            float originalSlipperiness = PlayerUtils.getWorld(playerr).getBlockState(blockPos).getBlock().getSlipperiness();
             return new Vec3d((velocity.x/originalSlipperiness)*0.995f, velocity.y, (velocity.z/originalSlipperiness)*0.995f);
         }
         return velocity;

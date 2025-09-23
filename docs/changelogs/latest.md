@@ -61,3 +61,6 @@ The '/health get' command now accepts multiple targets.
 
 Added the '/task get <player>' command, which shows you if '<player>' has a task, and the task itself you want to.<br>
 Added the 'broadcast_tasks_when_submitted' Secret Life config. Default value is false.
+
+----------
+

@@ -13,6 +13,9 @@ import java.awt.*;
 import java.util.ArrayList;
 import java.util.List;
 
+//? if >= 1.21.9
+/*import net.minecraft.client.gui.Click;*/
+
 public class ChooseExtraSeasonScreen extends DefaultScreen {
 
     public static boolean hasSelectedBefore = false;
@@ -76,8 +79,15 @@ public class ChooseExtraSeasonScreen extends DefaultScreen {
     }
 
     @Override
+    //? if <= 1.21.6 {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0) { // Left-click
+    //?} else {
+    /*public boolean mouseClicked(Click click, boolean doubled) {
+        double mouseX = click.x();
+        double mouseY = click.y();
+        if (click.isLeft()) { // Left-click
+    *///?}
             int region = getRegion((int) mouseX, (int) mouseY);
             if (region == -1 && this.client != null) {
                 this.client.setScreen(new ChooseSeasonScreen(hasSelectedBefore));
@@ -87,7 +97,11 @@ public class ChooseExtraSeasonScreen extends DefaultScreen {
                 return true;
             }
         }
+        //? if <= 1.21.6 {
         return super.mouseClicked(mouseX, mouseY, button);
+        //?} else {
+        /*return super.mouseClicked(click, doubled);
+        *///?}
     }
 
     public void handleSeasonRegionClick(int region) {

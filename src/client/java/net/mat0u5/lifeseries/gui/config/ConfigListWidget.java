@@ -10,6 +10,11 @@ import net.minecraft.text.Text;
 import java.util.List;
 import java.util.Map;
 import java.util.TreeMap;
+//? if >= 1.21.9 {
+/*import net.minecraft.client.gui.Click;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
+*///?}
 
 public class ConfigListWidget extends AlwaysSelectedEntryListWidget<ConfigListWidget.ConfigEntryWidget> {
     public static final int ENTRY_GAP = 2;
@@ -78,7 +83,15 @@ public class ConfigListWidget extends AlwaysSelectedEntryListWidget<ConfigListWi
                 boolean hovered = mouseX >= entryLeft && mouseX < entryLeft + entryWidth &&
                         mouseY >= currentY && mouseY < currentY + entryHeight;
 
+                //? if <= 1.21.6 {
                 entry.render(context, i, currentY, entryLeft, entryWidth, entryHeight, mouseX, mouseY, hovered, delta);
+                //?} else {
+                /*entry.setX(entryLeft);
+                entry.setY(currentY);
+                entry.setWidth(entryWidth);
+                entry.setHeight(entryHeight);
+                entry.render(context, mouseX, mouseY, hovered, delta);
+                *///?}
 
 
                 List<ConfigEntry> withChildren = List.of(configEntry);
@@ -148,7 +161,13 @@ public class ConfigListWidget extends AlwaysSelectedEntryListWidget<ConfigListWi
     //?}
 
     @Override
+    //? if <= 1.21.6 {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+    //?} else {
+    /*public boolean mouseClicked(Click click, boolean doubled) {
+        int mouseX = (int) click.x();
+        int mouseY = (int) click.y();
+    *///?}
         if (!isMouseOver(mouseX, mouseY)) {
             return false;
         }
@@ -163,7 +182,7 @@ public class ConfigListWidget extends AlwaysSelectedEntryListWidget<ConfigListWi
             if (mouseY >= currentY && mouseY < currentY + entryHeight) {
                 setFocused(entry);
                 entry.getConfigEntry().setFocused(true);
-                return entry.mouseClicked(mouseX, mouseY, button);
+                return entry.mouseClicked(click, doubled);
             }
 
             currentY += entryHeight;
@@ -186,6 +205,7 @@ public class ConfigListWidget extends AlwaysSelectedEntryListWidget<ConfigListWi
     }
     *///?}
 
+    //? if <= 1.21.6 {
     @Override
     public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         ConfigEntryWidget entry = getFocused();
@@ -199,6 +219,21 @@ public class ConfigListWidget extends AlwaysSelectedEntryListWidget<ConfigListWi
         if (entry == null) return false;
         return entry.charTyped(chr, modifiers);
     }
+    //?} else {
+    /*@Override
+    public boolean keyPressed(KeyInput input) {
+        ConfigEntryWidget entry = getFocused();
+        if (entry == null) return false;
+        return entry.keyPressed(input);
+    }
+
+    @Override
+    public boolean charTyped(CharInput input) {
+        ConfigEntryWidget entry = getFocused();
+        if (entry == null) return false;
+        return entry.charTyped(input);
+    }
+    *///?}
 
     public int getCurrentY() {
         return getY() + 4 - (int)getScrolledAmount();
@@ -216,10 +251,10 @@ public class ConfigListWidget extends AlwaysSelectedEntryListWidget<ConfigListWi
             this.configEntry = configEntry;
         }
 
+        //? if <= 1.21.6 {
         @Override
         public void render(DrawContext context, int index, int y, int x, int entryWidth, int entryHeight, int mouseX, int mouseY, boolean hovered, float tickDelta) {
-            int preferredHeight = configEntry.getPreferredHeight();
-            configEntry.render(context, x, y, entryWidth, preferredHeight, mouseX, mouseY, hovered, tickDelta);
+            configEntry.render(context, x, y, entryWidth, entryHeight, mouseX, mouseY, hovered, tickDelta);
         }
 
         @Override
@@ -239,6 +274,30 @@ public class ConfigListWidget extends AlwaysSelectedEntryListWidget<ConfigListWi
             configEntry.setFocused(true);
             return configEntry.charTyped(chr, modifiers);
         }
+        //?} else {
+        /*@Override
+        public void render(DrawContext context, int mouseX, int mouseY, boolean hovered, float tickDelta) {
+            configEntry.render(context, this.getX(), this.getY(), this.getWidth(), this.getHeight(), mouseX, mouseY, hovered, tickDelta);
+        }
+
+        @Override
+        public boolean mouseClicked(Click click, boolean doubled) {
+            configEntry.setFocused(true);
+            return configEntry.mouseClicked(click, doubled);
+        }
+
+        @Override
+        public boolean keyPressed(KeyInput input) {
+            configEntry.setFocused(true);
+            return configEntry.keyPressed(input);
+        }
+
+        @Override
+        public boolean charTyped(CharInput input) {
+            configEntry.setFocused(true);
+            return configEntry.charTyped(input);
+        }
+        *///?}
 
         @Override
         public Text getNarration() {

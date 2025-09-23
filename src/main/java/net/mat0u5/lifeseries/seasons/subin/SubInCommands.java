@@ -10,6 +10,7 @@ import net.mat0u5.lifeseries.utils.other.TextUtils;
 import net.mat0u5.lifeseries.utils.player.PermissionManager;
 import net.mat0u5.lifeseries.utils.player.PlayerUtils;
 import net.minecraft.command.argument.EntityArgumentType;
+import net.minecraft.server.PlayerConfigEntry;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
@@ -65,11 +66,20 @@ public class SubInCommands extends Command {
         if (checkBanned(source)) return -1;
 
         GameProfile targetProfile = null;
+        //? if <= 1.21.6 {
         if (source.getServer().getUserCache() != null) {
             Optional<GameProfile> opt = source.getServer().getUserCache().findByName(target);
             if (opt.isPresent()) {
                 targetProfile = opt.get();
             }
+        //?} else {
+        /*if (source.getServer().getApiServices().nameToIdCache() != null) {
+            Optional<PlayerConfigEntry> opt = source.getServer().getApiServices().nameToIdCache().findByName(target);
+            if (opt.isPresent()) {
+                PlayerConfigEntry playerConfigEntry = opt.get();
+                targetProfile = new GameProfile(playerConfigEntry.id(), playerConfigEntry.name());
+            }
+        *///?}
         }
         if (targetProfile == null) {
             source.sendError(Text.of("Failed to fetch target profile"));
@@ -85,13 +95,13 @@ public class SubInCommands extends Command {
 
         if (SubInManager.isSubbingIn(player.getUuid())) {
             GameProfile profile = SubInManager.getSubstitutedPlayer(player.getUuid());
-            source.sendError(TextUtils.formatPlain("{} is already subbing in for {}", player, profile.getName()));
+            source.sendError(TextUtils.formatPlain("{} is already subbing in for {}", player, OtherUtils.profileName(profile)));
             return -1;
         }
 
-        if (SubInManager.isBeingSubstituted(targetProfile.getId())) {
-            GameProfile profile = SubInManager.getSubstitutingPlayer(targetProfile.getId());
-            source.sendError(TextUtils.formatPlain("{} is already being subbed in for by {}", target, profile.getName()));
+        if (SubInManager.isBeingSubstituted(OtherUtils.profileId(targetProfile))) {
+            GameProfile profile = SubInManager.getSubstitutingPlayer(OtherUtils.profileId(targetProfile));
+            source.sendError(TextUtils.formatPlain("{} is already being subbed in for by {}", target, OtherUtils.profileName(profile)));
             return -1;
         }
 
@@ -111,7 +121,7 @@ public class SubInCommands extends Command {
 
         GameProfile profile = SubInManager.getSubstitutedPlayer(player.getUuid());
 
-        OtherUtils.sendCommandFeedback(source, TextUtils.format("{} is no longer subbing in for {}", player, profile.getName()));
+        OtherUtils.sendCommandFeedback(source, TextUtils.format("{} is no longer subbing in for {}", player, OtherUtils.profileName(profile)));
         SubInManager.removeSubIn(player);
         return 1;
     }
@@ -127,7 +137,7 @@ public class SubInCommands extends Command {
         OtherUtils.sendCommandFeedbackQuiet(source, Text.of("§7Current sub ins:"));
 
         for (SubInManager.SubIn subIn : SubInManager.subIns) {
-            OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.formatLoosely(" §7{} is subbinng in for {}", subIn.substituter().getName(), subIn.target().getName()));
+            OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.formatLoosely(" §7{} is subbinng in for {}", OtherUtils.profileName(subIn.substituter()), OtherUtils.profileName(subIn.target())));
         }
 
         return 1;

@@ -162,7 +162,7 @@ public class ClientUtils {
     public static boolean isSpaceEmpty(ClientPlayerEntity player, Box box, double offsetX, double offsetY, double offsetZ) {
         if (player.noClip || player.isSpectator()) return true;
         Box newBox = new Box(box.minX + offsetX, box.minY +offsetY, box.minZ + offsetZ, box.maxX + offsetX, box.minY, box.maxZ + offsetZ);
-        return player.getWorld().isSpaceEmpty(player, newBox);
+        return PlayerUtils.getWorld(player).isSpaceEmpty(player, newBox);
     }
 
     public static Vec3d recursivelyFindDesiredCollission(ClientPlayerEntity player, Box newBoundingBox, double offsetY, boolean desiredSpaceEmpty) {

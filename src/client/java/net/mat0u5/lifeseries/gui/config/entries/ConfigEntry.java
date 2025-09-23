@@ -16,6 +16,12 @@ import net.minecraft.util.Formatting;
 
 import java.util.Objects;
 
+//? if >= 1.21.9 {
+/*import net.minecraft.client.gui.Click;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
+*///?}
+
 public abstract class ConfigEntry {
     public static final int PREFFERED_HEIGHT = 20;
     protected static final int LABEL_OFFSET_X = 25;
@@ -142,6 +148,10 @@ public abstract class ConfigEntry {
         return totalWidth - RESET_BUTTON_WIDTH - 15;
     }
 
+    //? if <= 1.21.6 {
+    protected abstract boolean mouseClickedEntry(double mouseX, double mouseY, int button);
+    protected abstract boolean keyPressedEntry(int keyCode, int scanCode, int modifiers);
+    protected abstract boolean charTypedEntry(char chr, int modifiers);
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (hasResetButton() && resetButton.mouseClicked(mouseX, mouseY, button)) {
             return true;
@@ -156,6 +166,25 @@ public abstract class ConfigEntry {
     public boolean charTyped(char chr, int modifiers) {
         return charTypedEntry(chr, modifiers);
     }
+    //?} else {
+    /*protected abstract boolean mouseClickedEntry(Click click, boolean doubled);
+    protected abstract boolean keyPressedEntry(KeyInput keyInput);
+    protected abstract boolean charTypedEntry(CharInput charInput);
+    public boolean mouseClicked(Click click, boolean doubled) {
+        if (hasResetButton() && resetButton.mouseClicked(click, doubled)) {
+            return true;
+        }
+        return mouseClickedEntry(click, doubled);
+    }
+
+    public boolean keyPressed(KeyInput keyInput) {
+        return keyPressedEntry(keyInput);
+    }
+
+    public boolean charTyped(CharInput charInput) {
+        return charTypedEntry(charInput);
+    }
+    *///?}
 
     public void setFocused(boolean focused) {
         setActualFocused(focused);
@@ -177,9 +206,6 @@ public abstract class ConfigEntry {
     }
 
     protected abstract void renderEntry(DrawContext context, int x, int y, int width, int height, int mouseX, int mouseY, boolean hovered, float tickDelta);
-    protected abstract boolean mouseClickedEntry(double mouseX, double mouseY, int button);
-    protected abstract boolean keyPressedEntry(int keyCode, int scanCode, int modifiers);
-    protected abstract boolean charTypedEntry(char chr, int modifiers);
     protected abstract void resetToDefault();
 
     public abstract Object getValue();

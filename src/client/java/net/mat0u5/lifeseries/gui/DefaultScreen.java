@@ -6,6 +6,9 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.text.Text;
 
+//? if >= 1.21.9
+/*import net.minecraft.client.gui.Click;*/
+
 public abstract class DefaultScreen extends Screen {
 
     protected int BG_WIDTH;
@@ -63,6 +66,7 @@ public abstract class DefaultScreen extends Screen {
         return true;
     }
 
+    //? if <= 1.21.6 {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (button == 0 && allowCloseButton()) { // Left-click
@@ -73,6 +77,18 @@ public abstract class DefaultScreen extends Screen {
         }
         return super.mouseClicked(mouseX, mouseY, button);
     }
+    //?} else {
+    /*@Override
+    public boolean mouseClicked(Click click, boolean doubled) {
+        if (click.isLeft() && allowCloseButton()) { // Left-click
+            if (isInCloseRegion((int)click.x(), (int)click.y())) {
+                closeButtonClicked();
+                return true;
+            }
+        }
+        return super.mouseClicked(click, doubled);
+    }
+    *///?}
 
     public void closeButtonClicked() {
         this.close();

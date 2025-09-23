@@ -309,7 +309,7 @@ public abstract class Season {
         if (!killedByPlayer) {
             onPlayerDiedNaturally(player);
         }
-        if (livesManager.canChangeLivesNaturally(player)) {
+        if (livesManager.canChangeLivesNaturally(player) && livesManager.hasAssignedLives(player)) {
             livesManager.removePlayerLife(player);
         }
     }

@@ -186,15 +186,14 @@ public class SecretLifeCommands extends Command {
     }
 
     public int getTask(ServerCommandSource source, ServerPlayerEntity player) {
-        //TODO test
         if (checkBanned(source)) return -1;
         if (player == null) return -1;
 
-        boolean hasPreassignedTask = !TaskManager.preAssignedTasks.containsKey(player.getUuid());
+        boolean hasPreassignedTask = TaskManager.preAssignedTasks.containsKey(player.getUuid());
         boolean hasTaskBook = TaskManager.hasTaskBookCheck(player, false);
 
         if (!hasTaskBook && !hasPreassignedTask) {
-            source.sendMessage(TextUtils.formatPlain("{} does not have a rawTask book in their inventory nor a pre-assigned rawTask", player));
+            source.sendMessage(TextUtils.formatPlain("{} does not have a task book in their inventory nor a pre-assigned task", player));
             return -1;
         }
 
@@ -202,13 +201,20 @@ public class SecretLifeCommands extends Command {
         Task task = null;
 
         if (hasTaskBook) {
-            OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.format("{} has a rawTask book in their inventory", player));
-            task = TaskManager.assignedTasks.get(player.getUuid());
+            OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.format("{} has a task book in their inventory", player));
+            if (TaskManager.assignedTasks.containsKey(player.getUuid())) {
+                task = TaskManager.assignedTasks.get(player.getUuid());
+            }
         }
         else {
             //Pre-assigned task
-            OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.format("{} has a pre-assigned rawTask", player));
+            OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.format("{} has a pre-assigned task", player));
             task = TaskManager.preAssignedTasks.get(player.getUuid());
+        }
+
+        if (task == null) {
+            source.sendError(Text.of("Failed to read task contents"));
+            return -1;
         }
 
         if (!task.formattedTask.isEmpty()) {
@@ -219,7 +225,7 @@ public class SecretLifeCommands extends Command {
         }
 
         if (!rawTask.isEmpty()) {
-            OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.format("§7Click {} §7 to show the task they have.", TextUtils.selfMessageText(rawTask)));
+            OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.format("§7Click {}§7 to show the task they have.", TextUtils.selfMessageText(rawTask)));
         }
 
         return 1;
@@ -420,7 +426,6 @@ public class SecretLifeCommands extends Command {
     }
 
     public int getHealthFor(ServerCommandSource source, Collection<ServerPlayerEntity> targets) {
-        //TODO test
         if (checkBanned(source)) return -1;
         if (targets == null) return -1;
 

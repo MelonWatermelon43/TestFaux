@@ -4,6 +4,12 @@ import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 
+//? if >= 1.21.9 {
+/*import net.minecraft.client.gui.Click;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
+*///?}
+
 public abstract class ButtonConfigEntry extends ConfigEntry {
     protected final ButtonWidget button;
 
@@ -42,6 +48,7 @@ public abstract class ButtonConfigEntry extends ConfigEntry {
         return y;
     }
 
+    //? if <= 1.21.6 {
     @Override
     protected boolean mouseClickedEntry(double mouseX, double mouseY, int button) {
         this.button.mouseClicked(mouseX, mouseY, button);
@@ -57,4 +64,21 @@ public abstract class ButtonConfigEntry extends ConfigEntry {
     protected boolean charTypedEntry(char chr, int modifiers) {
         return false;
     }
+    //?} else {
+    /*@Override
+    protected boolean mouseClickedEntry(Click click, boolean doubled) {
+        this.button.mouseClicked(click, doubled);
+        return true;
+    }
+
+    @Override
+    protected boolean keyPressedEntry(KeyInput input) {
+        return false;
+    }
+
+    @Override
+    protected boolean charTypedEntry(CharInput input) {
+        return false;
+    }
+    *///?}
 }

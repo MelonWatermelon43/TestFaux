@@ -1,6 +1,11 @@
 package net.mat0u5.lifeseries.gui.config.entries;
 
 import net.minecraft.client.gui.DrawContext;
+//? if >= 1.21.9 {
+/*import net.minecraft.client.gui.Click;
+import net.minecraft.client.input.CharInput;
+import net.minecraft.client.input.KeyInput;
+*///?}
 
 public abstract class EmptyConfigEntry extends ConfigEntry {
     public EmptyConfigEntry(String fieldName, String displayName, String description) {
@@ -11,6 +16,7 @@ public abstract class EmptyConfigEntry extends ConfigEntry {
     protected void renderEntry(DrawContext context, int x, int y, int width, int height, int mouseX, int mouseY, boolean hovered, float tickDelta) {
     }
 
+    //? if <= 1.21 {
     @Override
     protected boolean mouseClickedEntry(double mouseX, double mouseY, int button) {
         return false;
@@ -25,6 +31,22 @@ public abstract class EmptyConfigEntry extends ConfigEntry {
     protected boolean charTypedEntry(char chr, int modifiers) {
         return false;
     }
+    //?} else {
+    /*@Override
+    protected boolean mouseClickedEntry(Click click, boolean doubled) {
+        return false;
+    }
+
+    @Override
+    protected boolean keyPressedEntry(KeyInput input) {
+        return false;
+    }
+
+    @Override
+    protected boolean charTypedEntry(CharInput input) {
+        return false;
+    }
+    *///?}
 
     @Override
     protected void resetToDefault() {

@@ -1,5 +1,6 @@
 package net.mat0u5.lifeseries.utils.other;
 
+import com.mojang.authlib.GameProfile;
 import net.mat0u5.lifeseries.Main;
 import net.mat0u5.lifeseries.events.Events;
 import net.mat0u5.lifeseries.utils.player.PlayerUtils;
@@ -217,5 +218,21 @@ public class OtherUtils {
     public static void sendCommandFeedbackQuiet(ServerCommandSource source, Text text) {
         if (source == null || text == null) return;
         source.sendFeedback(() -> text, false);
+    }
+
+    public static UUID profileId(GameProfile profile) {
+        //? if <= 1.21.6 {
+        return profile.getId();
+         //?} else {
+        /*return profile.id();
+        *///?}
+    }
+
+    public static String profileName(GameProfile profile) {
+        //? if <= 1.21.6 {
+        return profile.getName();
+         //?} else {
+        /*return profile.name();
+        *///?}
     }
 }

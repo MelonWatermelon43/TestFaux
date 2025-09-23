@@ -7,6 +7,8 @@ import net.mat0u5.lifeseries.utils.enums.ConfigTypes;
 import net.mat0u5.lifeseries.utils.interfaces.IEntryGroupHeader;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.text.Text;
+//? if >= 1.21.9
+/*import net.minecraft.client.gui.Click;*/
 
 public class TextConfigEntry extends EmptyConfigEntry implements IEntryGroupHeader {
     protected static final int TEXT_OFFSET_X = -5;
@@ -32,8 +34,13 @@ public class TextConfigEntry extends EmptyConfigEntry implements IEntryGroupHead
     }
 
     @Override
+    //? if <= 1.21.6 {
     protected boolean mouseClickedEntry(double mouseX, double mouseY, int button) {
         if (clickable && button == 0) {
+    //?} else {
+    /*protected boolean mouseClickedEntry(Click click, boolean doubled) {
+    if (clickable && click.isLeft()) {
+    *///?}
             clicked = !clicked;
         }
         return clickable;

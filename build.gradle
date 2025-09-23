@@ -3,6 +3,11 @@ plugins {
  id 'maven-publish'
  id "me.modmuss50.mod-publish-plugin" version "0.8.4"
 }
+
+static boolean isValidVersion(String string) {
+ return string != null && !string.isEmpty() && !string.equalsIgnoreCase("null") && !string.equalsIgnoreCase("[VERSIONED]")
+}
+
 version = "${project.mod_version}+${stonecutter.current.project}"
 group = project.maven_group
 
@@ -41,21 +46,19 @@ dependencies {
  modImplementation("net.fabricmc:fabric-loader:${property("loader_version")}")
  modImplementation("net.fabricmc.fabric-api:fabric-api:${property("fabric_version")}")
 
- if (project.polymer_version != "null") modImplementation include("eu.pb4:polymer-bundled:${project.polymer_version}")
- if (project.blockbench_import_library_version != "null") modImplementation include("de.tomalbrc:blockbench-import-library:${project.blockbench_import_library_version}")
-
-
+ if (isValidVersion(project.polymer_version)) modImplementation include("eu.pb4:polymer-bundled:${project.polymer_version}")
+ if (isValidVersion(project.blockbench_import_library_version)) modImplementation include("de.tomalbrc:blockbench-import-library:${project.blockbench_import_library_version}")
 
  // Compile only for compatibility
  modCompileOnly "maven.modrinth:flashback:z0SX4zNw"
 
-// Runtime only QOL mods
- modRuntimeOnly "maven.modrinth:carpet-bot-relog:${project.carpet_bot_relog_version}"
- if (project.voicechat_mod_version != "null" && project.voicechat_mod_version != "") modRuntimeOnly "maven.modrinth:simple-voice-chat:fabric-${project.voicechat_mod_version}"
- if (project.carpet_mod_version != "null" && project.carpet_mod_version != "") modRuntimeOnly "maven.modrinth:carpet:${project.carpet_mod_version}"
+ // Runtime only QOL mods
+ if (isValidVersion(project.carpet_bot_relog_version)) modRuntimeOnly "maven.modrinth:carpet-bot-relog:${project.carpet_bot_relog_version}"
+ if (isValidVersion(project.voicechat_mod_version)) modRuntimeOnly "maven.modrinth:simple-voice-chat:fabric-${project.voicechat_mod_version}"
+ if (isValidVersion(project.carpet_mod_version)) modRuntimeOnly "maven.modrinth:carpet:${project.carpet_mod_version}"
 
  //Runtime and compile
- implementation "de.maxhenkel.voicechat:voicechat-api:${project.voicechat_api_version}"
+ if (isValidVersion(project.voicechat_api_version)) implementation "de.maxhenkel.voicechat:voicechat-api:${project.voicechat_api_version}"
 }
 loom {
  runConfigs.all {
@@ -126,7 +129,6 @@ publishMods {
   }
  }
 }
-
 
 // configure the maven publication
 publishing {

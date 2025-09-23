@@ -2,6 +2,7 @@ package net.mat0u5.lifeseries.mixin.client;
 
 import net.mat0u5.lifeseries.Main;
 import net.mat0u5.lifeseries.MainClient;
+import net.mat0u5.lifeseries.utils.other.OtherUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.AbstractClientPlayerEntity;
 import net.minecraft.client.network.PlayerListEntry;
@@ -28,7 +29,7 @@ public class AbstractClientPlayerEntityMixin {
             return;
         }
         for (PlayerListEntry entry : MinecraftClient.getInstance().getNetworkHandler().getPlayerList()) {
-            if (entry.getProfile().getId().equals(disguisedUUID)) {
+            if (OtherUtils.profileId(entry.getProfile()).equals(disguisedUUID)) {
                 cir.setReturnValue(entry.getSkinTextures());
                 return;
             }

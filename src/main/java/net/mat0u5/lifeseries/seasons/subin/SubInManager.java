@@ -2,6 +2,7 @@ package net.mat0u5.lifeseries.seasons.subin;
 
 import com.mojang.authlib.GameProfile;
 import net.mat0u5.lifeseries.utils.interfaces.IPlayerManager;
+import net.mat0u5.lifeseries.utils.other.OtherUtils;
 import net.mat0u5.lifeseries.utils.other.TextUtils;
 import net.mat0u5.lifeseries.utils.player.PlayerUtils;
 import net.minecraft.network.packet.s2c.play.ExperienceBarUpdateS2CPacket;
@@ -14,7 +15,7 @@ import java.util.UUID;
 
 import static net.mat0u5.lifeseries.Main.*;
 
-//? if < 1.21.6
+//? if != 1.21.6
 import net.minecraft.nbt.NbtCompound;
 //? if >= 1.21.6 {
 /*import net.minecraft.storage.ReadView;
@@ -24,13 +25,24 @@ import net.minecraft.util.ErrorReporter;
 public class SubInManager {
     public static List<SubIn> subIns = new ArrayList<>();
 
+    private static UUID getId(GameProfile profile) {
+        return OtherUtils.profileId(profile);
+    }
+    private static String getName(GameProfile profile) {
+        return OtherUtils.profileName(profile);
+    }
+
     public static void addSubIn(ServerPlayerEntity player, GameProfile targetProfile) {
         UUID playerUUID = player.getUuid();
         GameProfile playerProfile = player.getGameProfile();
 
+        UUID targetProfileId = getId(targetProfile);
         for (SubIn subIn : new ArrayList<>(subIns)) {
-            if (subIn.substituter().getId().equals(targetProfile.getId()) || subIn.target().getId().equals(targetProfile.getId()) ||
-                    subIn.substituter().getId().equals(playerUUID) || subIn.target().getId().equals(playerUUID)
+            UUID substituterId = getId(subIn.substituter());
+            UUID substituteeId = getId(subIn.target());
+
+            if (substituterId.equals(targetProfileId) || substituteeId.equals(targetProfileId) || 
+                    substituterId.equals(playerUUID) || substituteeId.equals(playerUUID)
             ) {
                 removeSubIn(subIn);
             }
@@ -43,7 +55,7 @@ public class SubInManager {
         PlayerUtils.updatePlayerInventory(player);
         player.networkHandler.sendPacket(new ExperienceBarUpdateS2CPacket(player.experienceProgress, player.totalExperience, player.experienceLevel));
 
-        Integer subInLives = livesManager.getScoreLives(targetProfile.getName());
+        Integer subInLives = livesManager.getScoreLives(getName(targetProfile));
         if (subInLives == null) {
             livesManager.resetPlayerLife(player);
         }
@@ -55,20 +67,20 @@ public class SubInManager {
     public static void removeSubIn(ServerPlayerEntity player) {
         UUID playerUUID = player.getUuid();
         for (SubIn subIn : new ArrayList<>(subIns)) {
-            if (subIn.substituter().getId().equals(playerUUID) || subIn.target().getId().equals(playerUUID)) {
+            if (getId(subIn.substituter()).equals(playerUUID) || getId(subIn.target()).equals(playerUUID)) {
                 removeSubIn(subIn);
             }
         }
     }
 
     private static void removeSubIn(SubIn subIn) {
-        ServerPlayerEntity player1 = PlayerUtils.getPlayer(subIn.substituter().getId());
-        ServerPlayerEntity player2 = PlayerUtils.getPlayer(subIn.target().getId());
+        ServerPlayerEntity player1 = PlayerUtils.getPlayer(getId(subIn.substituter()));
+        ServerPlayerEntity player2 = PlayerUtils.getPlayer(getId(subIn.target()));
         if (player1 != null) {
-            player1.sendMessage(TextUtils.formatLoosely("§6You are no longer subbing in for {}", subIn.target().getName()));
+            player1.sendMessage(TextUtils.formatLoosely("§6You are no longer subbing in for {}", getName(subIn.target())));
         }
         if (player2 != null) {
-            player2.sendMessage(TextUtils.formatLoosely("§6{} is no longer subbing in for you", subIn.substituter().getName()));
+            player2.sendMessage(TextUtils.formatLoosely("§6{} is no longer subbing in for you", getName(subIn.substituter())));
         }
 
         savePlayer(player1);
@@ -95,11 +107,17 @@ public class SubInManager {
                 player.readNbt(nbt);
                 PlayerUtils.teleport(player, player.getPos());
             });
-            //?} else {
+            //?} else if <= 1.21.6 {
             /*Optional<ReadView> data = iPlayerManager.ls$getSaveHandler().loadPlayerData(player, ErrorReporter.EMPTY);
             data.ifPresent(nbt -> {
                 player.readData(nbt);
                 PlayerUtils.teleport(player, player.getPos());
+            });
+            *///?} else {
+            /*Optional<NbtCompound> data = iPlayerManager.ls$getSaveHandler().loadPlayerData(player.getPlayerConfigEntry());
+            data.ifPresent(nbt -> {
+                //player.readData(); //TODO
+                //PlayerUtils.teleport(player, player.getPos());
             });
             *///?}
         }
@@ -108,7 +126,7 @@ public class SubInManager {
     public static boolean isSubbingIn(UUID uuid) {
         if (uuid == null) return false;
         for (SubIn subIn : subIns) {
-            if (subIn.substituter().getId().equals(uuid)) return true;
+            if (getId(subIn.substituter()).equals(uuid)) return true;
         }
         return false;
     }
@@ -116,7 +134,7 @@ public class SubInManager {
     public static boolean isBeingSubstituted(UUID uuid) {
         if (uuid == null) return false;
         for (SubIn subIn : subIns) {
-            if (subIn.target().getId().equals(uuid)) return true;
+            if (getId(subIn.target()).equals(uuid)) return true;
         }
         return false;
     }
@@ -124,7 +142,7 @@ public class SubInManager {
     public static GameProfile getSubstitutedPlayer(UUID uuid) {
         if (uuid == null) return null;
         for (SubIn subIn : subIns) {
-            if (subIn.substituter().getId().equals(uuid)) return subIn.target();
+            if (getId(subIn.substituter()).equals(uuid)) return subIn.target();
         }
         return null;
     }
@@ -132,7 +150,7 @@ public class SubInManager {
     public static GameProfile getSubstitutingPlayer(UUID uuid) {
         if (uuid == null) return null;
         for (SubIn subIn : subIns) {
-            if (subIn.target().getId().equals(uuid)) return subIn.substituter();
+            if (getId(subIn.target()).equals(uuid)) return subIn.substituter();
         }
         return null;
     }
@@ -140,13 +158,13 @@ public class SubInManager {
     public static UUID getSubstitutedPlayerUUID(UUID uuid) {
         GameProfile profile = getSubstitutedPlayer(uuid);
         if (profile == null) return null;
-        return profile.getId();
+        return getId(profile);
     }
 
     public static UUID getSubstitutingPlayerUUID(UUID uuid) {
         GameProfile profile = getSubstitutingPlayer(uuid);
         if (profile == null) return null;
-        return profile.getId();
+        return getId(profile);
     }
 
     public record SubIn(GameProfile substituter, GameProfile target) {

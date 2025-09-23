@@ -2,6 +2,7 @@ package net.mat0u5.lifeseries.mixin.client;
 
 import net.mat0u5.lifeseries.Main;
 import net.mat0u5.lifeseries.MainClient;
+import net.mat0u5.lifeseries.utils.other.OtherUtils;
 import net.mat0u5.lifeseries.utils.other.TextUtils;
 import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.network.PlayerListEntry;
@@ -24,11 +25,18 @@ public class EntityRendererMixin<T extends Entity> {
             index = 1
     )
     public Text render(Text text) {
-    //?} else {
+    //?} else if <= 1.21.6 {
     /*@ModifyArg(
             method = "render",
             at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/entity/EntityRenderer;renderLabelIfPresent(Lnet/minecraft/client/render/entity/state/EntityRenderState;Lnet/minecraft/text/Text;Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;I)V"),
             index = 1
+    )
+    public Text render(Text text) {
+    *///?} else {
+    /*@ModifyArg(
+            method = "renderLabelIfPresent",
+            at = @At(value = "INVOKE", target = "Lnet/minecraft/client/render/command/OrderedRenderCommandQueue;submitLabel(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/util/math/Vec3d;Lnet/minecraft/text/Text;ZIDLnet/minecraft/class_12075;)V"),
+            index = 2
     )
     public Text render(Text text) {
     *///?}
@@ -38,7 +46,7 @@ public class EntityRendererMixin<T extends Entity> {
         if (MainClient.playerDisguiseNames.containsKey(text.getString())) {
             String name = MainClient.playerDisguiseNames.get(text.getString());
             for (PlayerListEntry entry : MinecraftClient.getInstance().getNetworkHandler().getPlayerList()) {
-                if (entry.getProfile().getName().equalsIgnoreCase(TextUtils.removeFormattingCodes(name))) {
+                if (OtherUtils.profileName(entry.getProfile()).equalsIgnoreCase(TextUtils.removeFormattingCodes(name))) {
                     if (entry.getDisplayName() != null) {
                         return ls$applyColorblind(entry.getDisplayName(), entry.getScoreboardTeam());
                     }
@@ -48,7 +56,7 @@ public class EntityRendererMixin<T extends Entity> {
         }
         else {
             for (PlayerListEntry entry : MinecraftClient.getInstance().getNetworkHandler().getPlayerList()) {
-                if (entry.getProfile().getName().equalsIgnoreCase(TextUtils.removeFormattingCodes(text.getString()))) {
+                if (OtherUtils.profileName(entry.getProfile()).equalsIgnoreCase(TextUtils.removeFormattingCodes(text.getString()))) {
                     return ls$applyColorblind(text, entry.getScoreboardTeam());
                 }
             }

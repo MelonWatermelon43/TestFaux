@@ -122,7 +122,6 @@ public class TextUtils {
         *///?}
     }
 
-    //TODO test all texts
     public static Text selfMessageText(String message) {
         return runCommandText("/selfmsg " + message);
     }

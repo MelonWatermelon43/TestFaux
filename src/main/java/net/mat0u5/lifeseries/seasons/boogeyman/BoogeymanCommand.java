@@ -69,8 +69,8 @@ public class BoogeymanCommand extends Command {
                     )
                 )
                 .then(literal("fail")
+                        .requires(PermissionManager::isAdmin)
                         .then(argument("player", EntityArgumentType.player())
-                                .requires(PermissionManager::isAdmin)
                                 .executes(context -> failBoogey(context.getSource(), EntityArgumentType.getPlayer(context, "player")))
                         )
                 )
@@ -107,12 +107,12 @@ public class BoogeymanCommand extends Command {
         }
         if (!confirm) {
             source.sendError(Text.of("Warning: This will cause you to fail as the Boogeyman"));
-            source.sendError(Text.of("Run \"/boogeyman selfFail §lconfirm§l\" to confirm this action."));
+            source.sendError(Text.of("Run \"/boogeyman selfFail §lconfirm§r\" to confirm this action."));
             return -1;
         }
 
         if (!bm.BOOGEYMAN_ANNOUNCE_OUTCOME) {
-            OtherUtils.sendCommandFeedback(source, Text.of("§7Failing as the Boogeyman..."));
+            OtherUtils.sendCommandFeedbackQuiet(source, Text.of("§7Failing as the Boogeyman..."));
         }
         else {
             PlayerUtils.broadcastMessage(TextUtils.format("{}§7 voulentarily failed themselves as the Boogeyman. They have been consumed by the curse.", self));

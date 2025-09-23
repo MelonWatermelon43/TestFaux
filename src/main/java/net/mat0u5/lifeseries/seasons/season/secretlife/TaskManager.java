@@ -365,12 +365,11 @@ public class TaskManager {
     }
 
     public static void sendPublicTaskMessage(ServerPlayerEntity player) {
-        //TODO test
         String rawTask = "";
 
         Task task = null;
 
-        if (hasTaskBookCheck(player, false)) {
+        if (hasTaskBookCheck(player, false) && assignedTasks.containsKey(player.getUuid())) {
             task = assignedTasks.get(player.getUuid());
         }
         else if (preAssignedTasks.containsKey(player.getUuid())) {

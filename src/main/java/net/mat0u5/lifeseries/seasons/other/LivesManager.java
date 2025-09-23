@@ -7,6 +7,7 @@ import net.mat0u5.lifeseries.seasons.season.wildlife.wildcards.wildcard.superpow
 import net.mat0u5.lifeseries.seasons.session.SessionTranscript;
 import net.mat0u5.lifeseries.seasons.subin.SubInManager;
 import net.mat0u5.lifeseries.utils.enums.PacketNames;
+import net.mat0u5.lifeseries.utils.other.OtherUtils;
 import net.mat0u5.lifeseries.utils.other.TextUtils;
 import net.mat0u5.lifeseries.utils.player.PlayerUtils;
 import net.mat0u5.lifeseries.utils.player.ScoreboardUtils;
@@ -245,7 +246,7 @@ public class LivesManager {
         currentSeason.reloadPlayerTeam(player);
 
         if (SubInManager.isSubbingIn(player.getUuid())) {
-            String substitutedPlayerName = SubInManager.getSubstitutedPlayer(player.getUuid()).getName();
+            String substitutedPlayerName =OtherUtils.profileName(SubInManager.getSubstitutedPlayer(player.getUuid()));
             setScore(substitutedPlayerName, lives);
         }
     }
@@ -301,7 +302,7 @@ public class LivesManager {
 
 
     public void playerLostAllLives(ServerPlayerEntity player, Integer livesBefore) {
-        if (livesBefore != null || WatcherManager.isWatcher(player)) {
+        if (livesBefore != null) {
             player.changeGameMode(GameMode.SPECTATOR);
         }
         Vec3d pos = player.getPos();

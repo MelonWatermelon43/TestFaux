@@ -1,5 +1,6 @@
 package net.mat0u5.lifeseries.gui.config.entries.interfaces;
 
+import net.mat0u5.lifeseries.render.RenderUtils;
 import net.mat0u5.lifeseries.utils.TextColors;
 import net.minecraft.client.gui.DrawContext;
 
@@ -44,6 +45,6 @@ public interface IPopup {
 
     default void renderBackground(DrawContext context, int x, int y, int width, int height, int mouseX, int mouseY, float tickDelta) {
         context.fill(x, y, x + width, y + height, TextColors.LIGHT_BLACK);
-        context.drawBorder(x, y, width, height, TextColors.LIGHT_GRAY);
+        RenderUtils.drawBorder(context, x, y, width, height, TextColors.LIGHT_GRAY);
     }
 }

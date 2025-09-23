@@ -36,6 +36,7 @@ import net.minecraft.util.hit.HitResult;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.Vec3d;
 import net.minecraft.world.GameMode;
+import net.minecraft.world.World;
 import net.minecraft.world.event.GameEvent;
 
 import java.nio.charset.StandardCharsets;
@@ -358,9 +359,17 @@ public class PlayerUtils {
     public static ServerWorld getServerWorld(ServerPlayerEntity player) {
         //? if <= 1.21.5 {
         return player.getServerWorld();
-        //?} else if <= 1.21.6 {
+         //?} else if <= 1.21.6 {
         /*return player.getWorld();
-        *///?} else {
+         *///?} else {
+        /*return player.getEntityWorld();
+        *///?}
+    }
+
+    public static World getWorld(PlayerEntity player) {
+        //? if <= 1.21.6 {
+        return player.getWorld();
+         //?} else {
         /*return player.getEntityWorld();
         *///?}
     }
