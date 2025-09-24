@@ -331,7 +331,7 @@ public class ConfigScreen extends Screen {
     public boolean mouseClicked(Click click, boolean doubled) {
         int mouseX = (int) click.x();
         int mouseY = (int) click.y();
-        boolean leftClick = click.isLeft();
+        boolean leftClick = click.button() == 0;
 
         if (this.searchField.mouseClicked(click, doubled)) {
     *///?}

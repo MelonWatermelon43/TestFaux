@@ -114,7 +114,7 @@ public class ChooseSeasonScreen extends DefaultScreen {
     /*public boolean mouseClicked(Click click, boolean doubled) {
         double mouseX = click.x();
         double mouseY = click.y();
-        if (click.isLeft()) { // Left-click
+        if (click.button() == 0) { // Left-click
     *///?}
             int region = getRegion((int) mouseX, (int) mouseY);
             if (region == -1 && this.client != null) {

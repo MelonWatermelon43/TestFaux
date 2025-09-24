@@ -25,7 +25,11 @@ public class WanderingTraderManagerMixin {
         }
     }
     //?} else {
-    /*public void spawn(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals, CallbackInfo ci) {
+    /*//? if <= 1.21.6 {
+    public void spawn(ServerWorld world, boolean spawnMonsters, boolean spawnAnimals, CallbackInfo ci) {
+    //?} else {
+    /^public void spawn(ServerWorld world, boolean spawnMonsters, CallbackInfo ci) {
+    ^///?}
         if (!Main.isLogicalSide() || Main.modDisabled()) return;
         if (currentSeason.getSeason() == Seasons.SIMPLE_LIFE) {
             ci.cancel();

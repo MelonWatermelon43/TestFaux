@@ -80,7 +80,7 @@ public abstract class DefaultScreen extends Screen {
     //?} else {
     /*@Override
     public boolean mouseClicked(Click click, boolean doubled) {
-        if (click.isLeft() && allowCloseButton()) { // Left-click
+        if (click.button() == 0 && allowCloseButton()) { // Left-click
             if (isInCloseRegion((int)click.x(), (int)click.y())) {
                 closeButtonClicked();
                 return true;

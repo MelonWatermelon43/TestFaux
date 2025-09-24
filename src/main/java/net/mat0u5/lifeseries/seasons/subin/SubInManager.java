@@ -8,10 +8,7 @@ import net.mat0u5.lifeseries.utils.player.PlayerUtils;
 import net.minecraft.network.packet.s2c.play.ExperienceBarUpdateS2CPacket;
 import net.minecraft.server.network.ServerPlayerEntity;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 import static net.mat0u5.lifeseries.Main.*;
 
@@ -20,6 +17,10 @@ import net.minecraft.nbt.NbtCompound;
 //? if >= 1.21.6 {
 /*import net.minecraft.storage.ReadView;
 import net.minecraft.util.ErrorReporter;
+*///?}
+
+//? if >= 1.21.9 {
+/*import net.minecraft.storage.NbtReadView;
 *///?}
 
 public class SubInManager {
@@ -115,9 +116,10 @@ public class SubInManager {
             });
             *///?} else {
             /*Optional<NbtCompound> data = iPlayerManager.ls$getSaveHandler().loadPlayerData(player.getPlayerConfigEntry());
-            data.ifPresent(nbt -> {
-                //player.readData(); //TODO
-                //PlayerUtils.teleport(player, player.getPos());
+            Optional<ReadView> optional = data.map(playerData -> NbtReadView.create(ErrorReporter.EMPTY, server.getRegistryManager(), playerData));
+            optional.ifPresent(readView -> {
+                player.readData(readView);
+                PlayerUtils.teleport(player, player.getPos());
             });
             *///?}
         }

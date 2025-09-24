@@ -39,7 +39,7 @@ public class TextConfigEntry extends EmptyConfigEntry implements IEntryGroupHead
         if (clickable && button == 0) {
     //?} else {
     /*protected boolean mouseClickedEntry(Click click, boolean doubled) {
-    if (clickable && click.isLeft()) {
+    if (clickable && click.button() == 0) {
     *///?}
             clicked = !clicked;
         }

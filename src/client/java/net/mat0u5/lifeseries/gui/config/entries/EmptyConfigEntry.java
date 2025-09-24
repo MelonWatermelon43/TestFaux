@@ -16,7 +16,7 @@ public abstract class EmptyConfigEntry extends ConfigEntry {
     protected void renderEntry(DrawContext context, int x, int y, int width, int height, int mouseX, int mouseY, boolean hovered, float tickDelta) {
     }
 
-    //? if <= 1.21 {
+    //? if <= 1.21.6 {
     @Override
     protected boolean mouseClickedEntry(double mouseX, double mouseY, int button) {
         return false;

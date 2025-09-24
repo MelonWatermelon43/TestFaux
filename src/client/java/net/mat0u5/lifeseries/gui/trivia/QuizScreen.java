@@ -123,7 +123,7 @@ public class QuizScreen extends DefaultScreen {
     /*public boolean mouseClicked(Click click, boolean doubled) {
         double mouseX = click.x();
         double mouseY = click.y();
-        if (click.isLeft()) { // Left-click
+        if (click.button() == 0) { // Left-click
     *///?}
             for (int i = 0; i < answerRects.size(); i++) {
                 if (answerRects.get(i).contains(mouseX, mouseY)) {

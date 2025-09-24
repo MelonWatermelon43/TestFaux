@@ -10,14 +10,16 @@ import net.mat0u5.lifeseries.utils.other.TextUtils;
 import net.mat0u5.lifeseries.utils.player.PermissionManager;
 import net.mat0u5.lifeseries.utils.player.PlayerUtils;
 import net.minecraft.command.argument.EntityArgumentType;
-import net.minecraft.server.PlayerConfigEntry;
 import net.minecraft.server.command.ServerCommandSource;
 import net.minecraft.server.network.ServerPlayerEntity;
 import net.minecraft.text.Text;
-import net.minecraft.util.Uuids;
 
 import java.util.Optional;
 import java.util.UUID;
+//?if >= 1.21.9 {
+/*import net.minecraft.util.Uuids;
+import net.minecraft.server.PlayerConfigEntry;
+*///?}
 
 import static net.mat0u5.lifeseries.Main.currentSeason;
 

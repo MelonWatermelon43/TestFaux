@@ -23,11 +23,6 @@ public class PlayerSaveHandlerMixin {
     }
 
     //? if <= 1.21.6 {
-    @Redirect(method = "savePlayerData", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getUuidAsString()Ljava/lang/String;"))
-    public String subInSave(PlayerEntity instance) {
-        return ls$getStringUUIDForPlayer(instance);
-    }
-
     @Redirect(method = "loadPlayerData(Lnet/minecraft/entity/player/PlayerEntity;Ljava/lang/String;)Ljava/util/Optional;", at = @At(value = "INVOKE", target = "Lnet/minecraft/entity/player/PlayerEntity;getUuidAsString()Ljava/lang/String;"))
     public String subInLoad(PlayerEntity instance) {
         return ls$getStringUUIDForPlayer(instance);
