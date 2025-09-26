@@ -339,7 +339,7 @@ public class PlayerUtils {
         if (!player.isSpectator()) return false;
 
         if (currentSeason.TAB_LIST_SHOW_DEAD_PLAYERS) return false;
-        if (!livesManager.isAlive(receivingPlayer)) return false;
+        if (livesManager.isDead(receivingPlayer)) return false;
         if (livesManager.isAlive(player)) return false;
         if (WatcherManager.isWatcher(player)) return false;
         if (Necromancy.preIsRessurectedPlayer(player)) return false;

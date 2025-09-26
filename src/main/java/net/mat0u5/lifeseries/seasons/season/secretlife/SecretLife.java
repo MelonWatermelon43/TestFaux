@@ -306,7 +306,7 @@ public class SecretLife extends Season {
         super.sessionEnd();
         List<String> playersWithTaskBooks = new ArrayList<>();
         for (ServerPlayerEntity player : livesManager.getNonRedPlayers()) {
-            if (!livesManager.isAlive(player)) continue;
+            if (livesManager.isDead(player)) continue;
             if (TaskManager.submittedOrFailed.contains(player.getUuid())) continue;
             if (TaskManager.CONSTANT_TASKS) continue;
             playersWithTaskBooks.add(player.getNameForScoreboard());

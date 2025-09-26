@@ -52,11 +52,11 @@ public class GivelifeCommand extends Command {
         final ServerPlayerEntity self = source.getPlayer();
         if (self == null) return -1;
         if (target == null) return -1;
-        if (!livesManager.isAlive(self)) {
+        if (livesManager.isDead(self)) {
             source.sendError(Text.of("You do not have any lives to give"));
             return -1;
         }
-        boolean isRevive = !livesManager.isAlive(target);
+        boolean isRevive = livesManager.isDead(target);
         if (!Season.GIVELIFE_CAN_REVIVE && isRevive) {
             source.sendError(Text.of("That player is not alive"));
             return -1;

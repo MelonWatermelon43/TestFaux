@@ -134,7 +134,7 @@ public class AstralProjection extends ToggleableSuperpower {
             *///?}
         }
 
-        if (!livesManager.isAlive(player)) return;
+        if (livesManager.isDead(player)) return;
 
         if (startedWorld != null && toBackPos != null) {
             PlayerUtils.teleport(player, startedWorld, toBackPos, startedLooking[0], startedLooking[1]);

@@ -89,7 +89,7 @@ public class SizeShifting extends Wildcard {
     public static void resetSizesTick(boolean isActive) {
         for (ServerPlayerEntity player : PlayerUtils.getAllPlayers()) {
             boolean isWatcher = WatcherManager.isWatcher(player);
-            boolean isDeadSpectator = player.isSpectator() && !livesManager.isAlive(player);
+            boolean isDeadSpectator = player.isSpectator() && livesManager.isDead(player);
             if (!isActive || isDeadSpectator || isWatcher) {
                 double size = getPlayerSize(player);
                 if (TriviaBot.cursedGigantificationPlayers.contains(player.getUuid()) && !isWatcher && !isDeadSpectator) continue;

@@ -381,7 +381,7 @@ public class SecretLifeCommands extends Command {
             source.sendError(Text.of("You have already gifted a heart this session"));
             return -1;
         }
-        if (!livesManager.isAlive(target)) {
+        if (livesManager.isDead(target)) {
             source.sendError(Text.of("That player is not alive"));
             return -1;
         }
@@ -414,7 +414,7 @@ public class SecretLifeCommands extends Command {
 
         SecretLife secretLife = (SecretLife) currentSeason;
 
-        if (!livesManager.isAlive(self)) {
+        if (livesManager.isDead(self)) {
             OtherUtils.sendCommandFeedbackQuiet(source, Text.of("You're dead..."));
             return -1;
         }
@@ -435,7 +435,7 @@ public class SecretLifeCommands extends Command {
 
         for (ServerPlayerEntity player : targets) {
             SecretLife secretLife = (SecretLife) currentSeason;
-            if (!livesManager.isAlive(player)) {
+            if (livesManager.isDead(player)) {
                 OtherUtils.sendCommandFeedbackQuiet(source, TextUtils.format("{} is dead", player));
                 return -1;
             }

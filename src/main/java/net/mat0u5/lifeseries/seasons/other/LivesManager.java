@@ -166,6 +166,10 @@ public class LivesManager {
         return lives > 0;
     }
 
+    public boolean isDead(ServerPlayerEntity player) {
+        return !isAlive(player);
+    }
+
     public void removePlayerLife(ServerPlayerEntity player) {
         addToPlayerLives(player,-1);
     }
@@ -274,7 +278,7 @@ public class LivesManager {
 
     @Nullable
     public Boolean isOnSpecificLives(ServerPlayerEntity player, int check) {
-        if (!isAlive(player)) return null;
+        if (isDead(player)) return null;
         Integer lives = getPlayerLives(player);
         if (lives == null) return null;
         return lives == check;
@@ -288,7 +292,7 @@ public class LivesManager {
 
     @Nullable
     public Boolean isOnAtLeastLives(ServerPlayerEntity player, int check) {
-        if (!isAlive(player)) return null;
+        if (isDead(player)) return null;
         Integer lives = getPlayerLives(player);
         if (lives == null) return null;
         return lives >= check;
@@ -359,7 +363,7 @@ public class LivesManager {
 
     public List<ServerPlayerEntity> getAlivePlayers() {
         List<ServerPlayerEntity> players = PlayerUtils.getAllFunctioningPlayers();
-        players.removeIf(player -> !isAlive(player));
+        players.removeIf(this::isDead);
         return players;
     }
 

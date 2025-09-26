@@ -76,7 +76,7 @@ public class LimitedLifeLivesManager extends LivesManager {
 
     @Override
     public Boolean isOnSpecificLives(ServerPlayerEntity player, int check) {
-        if (!isAlive(player)) return null;
+        if (isDead(player)) return null;
         Integer lives = getEquivalentLives(getPlayerLives(player));
         if (lives == null) return null;
         return lives == check;

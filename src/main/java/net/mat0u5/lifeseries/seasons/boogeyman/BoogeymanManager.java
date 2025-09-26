@@ -351,15 +351,16 @@ public class BoogeymanManager {
         if (!BOOGEYMAN_ENABLED) return false;
         Boogeyman boogeyman = getBoogeyman(player);
         if (boogeymen == null) return false;
-        if (!livesManager.isAlive(player)) return false;
-        if (livesManager.isOnLastLife(player, true)) return false;
+        boolean canChangeLives = livesManager.isAlive(player) && !livesManager.isOnLastLife(player, true);
 
         if (BOOGEYMAN_ADVANCED_DEATHS) {
             PlayerUtils.sendTitle(player,Text.of("§cThe curse consumes you.."), 20, 30, 20);
             if (BOOGEYMAN_ANNOUNCE_OUTCOME && sendMessage) {
                 PlayerUtils.broadcastMessage(TextUtils.format("{}§7 failed to kill a player while being the §cBoogeyman§7. They have been consumed by the curse.", player));
             }
-            AdvancedDeathsManager.setPlayerLives(player, 1);
+            if (canChangeLives) {
+                AdvancedDeathsManager.setPlayerLives(player, 1);
+            }
         }
         else {
             PlayerUtils.sendTitle(player,Text.of("§cYou have failed."), 20, 30, 20);
@@ -367,7 +368,9 @@ public class BoogeymanManager {
             if (BOOGEYMAN_ANNOUNCE_OUTCOME && sendMessage) {
                 PlayerUtils.broadcastMessage(TextUtils.format("{}§7 failed to kill a player while being the §cBoogeyman§7. They have been dropped to their §cLast Life§7.", player));
             }
-            livesManager.setPlayerLives(player, 1);
+            if (canChangeLives) {
+                livesManager.setPlayerLives(player, 1);
+            }
         }
 
         boogeyman.failed = true;
@@ -386,7 +389,7 @@ public class BoogeymanManager {
         if (!BOOGEYMAN_ENABLED) return;
         if (!boogeymanChosen) return;
         if (rolledPlayers.contains(player.getUuid())) return;
-        if (!livesManager.isAlive(player)) return;
+        if (livesManager.isDead(player)) return;
         if (boogeymen.size() >= BOOGEYMAN_AMOUNT_MAX) return;
         if (currentSession.statusNotStarted() || currentSession.statusFinished()) return;
         TaskScheduler.scheduleTask(40, () -> {

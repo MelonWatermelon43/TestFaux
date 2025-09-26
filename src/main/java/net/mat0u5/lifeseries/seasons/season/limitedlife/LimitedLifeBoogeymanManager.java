@@ -60,8 +60,9 @@ public class LimitedLifeBoogeymanManager extends BoogeymanManager {
         if (!BOOGEYMAN_ENABLED) return false;
         Boogeyman boogeyman = getBoogeyman(player);
         if (boogeymen == null) return false;
-        if (!livesManager.isAlive(player)) return false;
-        if (livesManager.isOnLastLife(player, true)) return false;
+        if (livesManager.isDead(player)) return false;
+        boolean canChangeLives = livesManager.isAlive(player) && !livesManager.isOnLastLife(player, true);
+
         Integer currentLives = livesManager.getPlayerLives(player);
         if (currentLives == null) return false;
         Integer setToLives = LimitedLife.getNextLivesColorLives(currentLives);
@@ -72,10 +73,14 @@ public class LimitedLifeBoogeymanManager extends BoogeymanManager {
             if (BOOGEYMAN_ANNOUNCE_OUTCOME && sendMessage) {
                 PlayerUtils.broadcastMessage(TextUtils.format("{}§7 failed to kill a player while being the §cBoogeyman§7. They have been consumed by the curse.", player));
             }
-            AdvancedDeathsManager.setPlayerLives(player, setToLives);
+            if (canChangeLives) {
+                AdvancedDeathsManager.setPlayerLives(player, setToLives);
+            }
         }
         else {
-            livesManager.setPlayerLives(player, setToLives);
+            if (canChangeLives) {
+                livesManager.setPlayerLives(player, setToLives);
+            }
             Text setTo = livesManager.getFormattedLives(player);
 
             PlayerUtils.sendTitle(player,Text.of("§cYou have failed."), 20, 30, 20);

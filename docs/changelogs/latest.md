@@ -64,3 +64,5 @@ Added the 'broadcast_tasks_when_submitted' Secret Life config. Default value is 
 
 ----------
 
+You can now manually fail boogeymen even if they are already on their last life or dead.<br>
+Code refactoring.

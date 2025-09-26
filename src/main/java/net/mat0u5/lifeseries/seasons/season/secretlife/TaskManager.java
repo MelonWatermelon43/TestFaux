@@ -185,7 +185,7 @@ public class TaskManager {
         }
 
         removePlayersTaskBook(player);
-        if (!livesManager.isAlive(player)) return;
+        if (livesManager.isDead(player)) return;
         Task task;
         if (preAssignedTasks.containsKey(player.getUuid())) {
             task = preAssignedTasks.get(player.getUuid());
@@ -203,7 +203,7 @@ public class TaskManager {
 
     public static void assignRandomTasks(List<ServerPlayerEntity> allowedPlayers, TaskTypes type) {
         for (ServerPlayerEntity player : allowedPlayers) {
-            if (!livesManager.isAlive(player)) continue;
+            if (livesManager.isDead(player)) continue;
             TaskTypes thisType = type;
             if (thisType == null) {
                 thisType = TaskTypes.EASY;
